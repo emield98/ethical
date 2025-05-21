@@ -76,13 +76,13 @@ export function ChatbotBuilder() {
 
   return (
     <div className="space-y-8">
-      <Progress value={progress} className="h-2 w-full biased-progress" />
+      <Progress value={progress} className="h-2 w-full" />
 
-      <Tabs value={currentTabId} className="w-full biased-tabs">
+      <Tabs value={currentTabId} className="w-full">
         <TabsContent value="budget">
-          <Card className="biased-card">
+          <Card className="">
             <CardHeader>
-              <CardTitle className="biased-title">What's your budget?</CardTitle>
+              <CardTitle className="">What's your budget?</CardTitle>
               <CardDescription>
                 Your budget will determine the scale and quality of your chatbot project.
               </CardDescription>
@@ -93,7 +93,7 @@ export function ChatbotBuilder() {
                 onValueChange={(value) => updateChoice("budget", value)}
                 className="space-y-4 uneven-spacing"
               >
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                   <RadioGroupItem value="low" id="low" className="mt-1" />
                   <div className="space-y-2">
                     <Label htmlFor="low" className="text-base font-medium">
@@ -107,7 +107,7 @@ export function ChatbotBuilder() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                   <RadioGroupItem value="medium" id="medium" className="mt-1" />
                   <div className="space-y-2">
                     <Label htmlFor="medium" className="text-base font-medium">
@@ -120,7 +120,7 @@ export function ChatbotBuilder() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                   <RadioGroupItem value="high" id="high" className="mt-1" />
                   <div className="space-y-2">
                     <Label htmlFor="high" className="text-base font-medium">
@@ -137,7 +137,7 @@ export function ChatbotBuilder() {
               <EthicalInsights currentStep="budget" currentChoice={choices.budget} />
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button onClick={nextStep} disabled={!isStepComplete()} className="biased-button">
+              <Button onClick={nextStep} disabled={!isStepComplete()} className="">
                 Next: Training Data
               </Button>
             </CardFooter>
@@ -145,9 +145,9 @@ export function ChatbotBuilder() {
         </TabsContent>
 
         <TabsContent value="data">
-          <Card className="biased-card">
+          <Card className="">
             <CardHeader>
-              <CardTitle className="biased-title">Where is your training data coming from?</CardTitle>
+              <CardTitle className="">Where is your training data coming from?</CardTitle>
               <CardDescription>
                 The source and quality of your training data will significantly impact your chatbot's knowledge and
                 biases.
@@ -159,7 +159,7 @@ export function ChatbotBuilder() {
                 onValueChange={(value) => updateChoice("trainingData", value)}
                 className="space-y-4 uneven-spacing"
               >
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                   <RadioGroupItem value="public" id="public" className="mt-1" />
                   <div className="space-y-2">
                     <Label htmlFor="public" className="text-base font-medium">
@@ -186,7 +186,7 @@ export function ChatbotBuilder() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                   <RadioGroupItem value="proprietary" id="proprietary" className="mt-1" />
                   <div className="space-y-2">
                     <Label htmlFor="proprietary" className="text-base font-medium">
