@@ -12,6 +12,7 @@ import { ChatbotSummary } from "./chatbot-summary"
 import { GlossaryTooltip } from "./ui-tooltip"
 import { EthicalInsights } from "./ethical-insights"
 import { TradeOffExplainer } from "./trade-off-explainer"
+import { Source } from "./source-citation"
 
 const steps = ["budget", "data", "filtering", "behavior", "bias", "summary"]
 
@@ -168,6 +169,13 @@ export function ChatbotBuilder() {
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                       <GlossaryTooltip term="Web scraping">Web scraping</GlossaryTooltip>, social media, forums, and
                       other publicly available content. Broad coverage but may include biases and misinformation.
+                      <Source
+                        name="Common Crawl"
+                        url="https://commoncrawl.org/"
+                        description="Common Crawl maintains a free, open repository of web crawl data that can be used by anyone."
+                        date="2008-present"
+                        className="text-xs"
+                      />
                     </p>
                   </div>
                 </div>
