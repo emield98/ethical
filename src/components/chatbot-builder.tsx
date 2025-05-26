@@ -199,12 +199,10 @@ const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: Chatbo
                   <RadioGroupItem value="proprietary" id="proprietary" className="mt-1" />
                   <div className="space-y-2">
                     <Label htmlFor="proprietary" className="text-base font-medium">
-                      Proprietary/Internal Data
+                      Proprietary Data
                     </Label>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Your organization's documents, customer interactions, and{" "}
-                      <GlossaryTooltip term="proprietary data">domain-specific information</GlossaryTooltip>. Highly
-                      relevant but may be limited in breadth.
+                      Using websites like Outlier AI or Amazon Mechanical Turk to pay people to answer questions, write prompts, and other forms of human verified data. This can get expensive quickly but makes sure the data is high quality.
                     </p>
                   </div>
                 </div>

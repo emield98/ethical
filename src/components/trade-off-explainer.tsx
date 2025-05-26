@@ -51,20 +51,18 @@ const tradeOffs: Record<string, TradeOff> = {
     ],
   },
   "data-proprietary": {
-    title: "Proprietary/Internal Data",
+    title: "Proprietary Data",
     description:
-      "Using your organization's internal documents, customer interactions, and domain-specific information.",
+      "Using websites like Outlier AI or Amazon Mechanical Turk to pay people to answer questions, write prompts, and other forms of human verified data.",
     pros: [
-      "Highly relevant to your specific domain",
-      "Contains unique information not available to competitors",
-      "Can create competitive advantage through specialization",
-      "Better alignment with your organization's terminology and processes",
+      "Highest quality data",
+      "Tons of control over the data",
+      "Data sourced from here will obviously be free of hate speech or other offensive content",
     ],
     cons: [
-      "Limited general knowledge outside your domain",
-      "Raises privacy concerns if not properly anonymized",
-      "May perpetuate existing biases in your organization",
-      "Requires careful data governance and security",
+      "Super expensive and time-consuming to collect",
+      "May overrepresent certain perspectives (e.g., academic viewpoints)",
+      "Can result in unnoticed issues in the data, like the workers being biased towards certain topics",
     ],
   },
   "filtering-strict": {

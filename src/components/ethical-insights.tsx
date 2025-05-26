@@ -77,17 +77,23 @@ const insights: Record<string, EthicalInsight[]> = {
   ],
   "data-proprietary": [
     {
-      title: "Privacy Concerns",
+      title: "Workers Concerns",
       description:
-        "Using internal company data may expose sensitive customer or employee information if not properly anonymized and protected.",
+        "It is important to acknowledge and review the specific ethical issues that might arise when recruiting MTurk workers as participants. Things like participants’ economic vulnerability, participants’ sensitivity, and power dynamics between participants and researchers. ",
       category: "data",
-      realWorldExample:
-        "In 2020, some companies discovered their internal documents containing sensitive information had been used to train commercial AI systems.",
+      sources: [
+        {
+          name: "Ethical concerns arising from recruiting workers from Amazon's Mechanical Turk as research participants: Commentary on Burnette et al.",
+          url: "https://onlinelibrary.wiley.com/doi/10.1002/eat.23658",
+          description: "Ilka Helene Gleibs and Nihan Albayrak-Aydemir contributed equally to this work.",
+          date: "2021"
+        }
+      ]
     },
     {
       title: "Domain Limitations",
       description:
-        "Chatbots trained primarily on proprietary data may develop deep expertise in specific areas but struggle with general knowledge questions.",
+        "Chatbots trained primarily on proprietary data may develop knowledge in areas that the workers are experts in, but may not have general knowledge in other areas.",
       category: "data",
     },
   ],
