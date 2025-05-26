@@ -169,7 +169,7 @@ const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: Chatbo
                     </Label>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                       <GlossaryTooltip term="Web scraping">Web scraping</GlossaryTooltip>, social media, forums, and
-                      other publicly available content. Broad coverage but may include biases and misinformation.
+                      other publicly available content. Cheap, broad coverage but this may include inherent societal biases and misinformation.
                       <Source
                         name="Common Crawl"
                         url="https://commoncrawl.org/"

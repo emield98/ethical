@@ -5,8 +5,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, BookOpen, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Source } from "@/components/source-citation"
 
 type InsightCategory = "data" | "filtering" | "bias" | "business" | "technical"
+
+interface Source {
+  name: string
+  url?: string
+  description?: string
+  date?: string
+}
 
 interface EthicalInsight {
   title: string
@@ -14,19 +22,34 @@ interface EthicalInsight {
   category: InsightCategory
   realWorldExample?: string
   learnMoreLink?: string
+  sources?: Source[]
+  applicableScenarios?: string[]
 }
+
+
+const commonInsights: EthicalInsight[] = [
+  {
+    title: "Representation Bias",
+    description:
+      "The reliance on data to train algorithms introduces an omnipresent challenge, as data itself can reflect biases inherent in societal structures (eg, racism, prejudice, and classism), historical patterns of biases that mediate the practice of medicine and delivery of health care.",
+    category: "data",
+    realWorldExample:
+      "In 2016, Microsoft's Tay chatbot was trained on Twitter data and quickly began producing offensive content after being exposed to toxic user interactions.",
+    learnMoreLink: "https://en.wikipedia.org/wiki/Tay_(bot)",
+    sources: [
+      {
+        name: "AI and Representation Bias",
+        url: "https://www.nature.com/articles/s41591-020-01177-6",
+        description: "Research paper on how AI systems can perpetuate healthcare disparities through biased training data",
+        date: "2020"
+      }
+    ],
+    applicableScenarios: ["data-public", "data-curated", "data-proprietary"]
+  }
+]
 
 const insights: Record<string, EthicalInsight[]> = {
   "data-public": [
-    {
-      title: "Representation Bias",
-      description:
-        "Public internet data often overrepresents certain demographics and viewpoints while underrepresenting others. This can lead to chatbots that work better for some groups than others.",
-      category: "data",
-      realWorldExample:
-        "In 2016, Microsoft's Tay chatbot was trained on Twitter data and quickly began producing offensive content after being exposed to toxic user interactions.",
-      learnMoreLink: "https://en.wikipedia.org/wiki/Tay_(bot)",
-    },
     {
       title: "Quality Control Challenges",
       description:
@@ -175,9 +198,18 @@ export function EthicalInsights({ currentStep, currentChoice, adaptToUser }: Eth
   let relevantInsights: EthicalInsight[] = []
 
   const stepKey = `${currentStep}-${currentChoice}`
+  
+  // Add specific insights for this step-choice combination
   if (insights[stepKey]) {
     relevantInsights = [...insights[stepKey]]
   }
+  
+  // Add common insights that apply to this scenario
+  commonInsights.forEach(insight => {
+    if (insight.applicableScenarios?.includes(stepKey)) {
+      relevantInsights.push(insight)
+    }
+  })
 
   // Add adaptation insights if relevant
   if (adaptToUser && currentStep === "behavior" && insights["adaptToUser-true"]) {
@@ -224,6 +256,21 @@ export function EthicalInsights({ currentStep, currentChoice, adaptToUser }: Eth
                   >
                     <BookOpen className="h-3 w-3" /> Learn more
                   </a>
+                </div>
+              )}
+
+              {insight.sources && insight.sources.length > 0 && (
+                <div className="mt-2">
+                  {insight.sources.map((source, idx) => (
+                    <Source
+                      key={idx}
+                      name={source.name}
+                      url={source.url}
+                      description={source.description}
+                      date={source.date}
+                      compact
+                    />
+                  ))}
                 </div>
               )}
             </div>
