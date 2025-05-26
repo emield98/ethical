@@ -36,12 +36,13 @@ export function ChatbotBuilder() {
     biasHandling: "",
   })
 
-  const updateChoice = (category: keyof ChatbotChoices, value: any) => {
-    setChoices((prev) => ({
-      ...prev,
-      [category]: value,
-    }))
-  }
+const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: ChatbotChoices[K]) => {
+  setChoices((prev) => ({
+    ...prev,
+    [category]: value,
+  }));
+};
+
 
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
@@ -349,8 +350,8 @@ export function ChatbotBuilder() {
               <div className="flex items-start space-x-3 p-4 border rounded-lg">
                 <Checkbox
                   id="adapt"
-                  checked={choices.adaptToUser}
-                  onCheckedChange={(checked) => updateChoice("adaptToUser", checked)}
+                  checked={!!choices.adaptToUser}
+                  onCheckedChange={(checked) => updateChoice("adaptToUser", !!checked)}
                 />
                 <div className="space-y-2">
                   <Label htmlFor="adapt" className="text-base font-medium">
