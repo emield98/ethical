@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ChatbotSummary } from "./chatbot-summary"
 import { EthicalInsights } from "./ethical-insights"
+import { TradeOffExplainer } from "./trade-off-explainer"
 import { BudgetTracker } from "./budget-tracker"
 import { ChatbotAnimation } from "./chatbot-animation"
 import { StepProgress } from "./step-progress"
@@ -440,12 +441,12 @@ export function ChatbotBuilder() {
                               <Label htmlFor={option.id} className="text-base font-medium">
                                 {option.label}
                               </Label>
-                              {available && cost !== null && (
+                              {available && cost !== null ? (
                                 <div className="flex items-center gap-1">
                                   <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost ?? 0)}</Badge>
                                   <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
                                 </div>
-                              )} : {(
+                              ) : (
                                 <div className="flex items-center gap-1">
                                   <Badge variant="secondary">Not Available</Badge>
                                   <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
@@ -572,106 +573,117 @@ export function ChatbotBuilder() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="behavior">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Chatbot Personality & Behavior</CardTitle>
-                  <CardDescription>Define how your chatbot interacts with users.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <RadioGroup
-                    value={choices.behavior}
-                    onValueChange={(value: 'small' | 'medium' | 'large') => {
-                      const cost = getCost("behavior", value)
-                      const oldCost = choices.behavior ? getCost("behavior", choices.behavior) : 0
-                      if (cost === null || oldCost === null) return
-                      updateChoice("behavior", value)
-                      updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
-                    }}
-                    className="space-y-4"
-                  >
-                    {[
-                      {
-                        id: "formal",
-                        label: "Formal and Professional",
-                        description: "Business-like, precise, and authoritative tone.",
-                      },
-                      {
-                        id: "friendly",
-                        label: "Friendly and Conversational",
-                        description: "Warm, approachable, and casual interaction style.",
-                      },
-                      {
-                        id: "creative",
-                        label: "Creative and Expressive",
-                        description: "Imaginative, witty, and engaging personality.",
-                      },
-                      {
-                        id: "adaptive",
-                        label: "Adaptive Behavior",
-                        description: "Learns and adapts to individual user preferences over time.",
-                      },
-                    ].map((option) => {
-                      const cost = getCost("behavior", option.id)
-                      const available = isAvailable("behavior", option.id)
-                      const affordable = canAfford("behavior", option.id)
-                      const budgetLevel = getBudgetLevel()
+        <TabsContent value="behavior">
+          <Card className="biased-card">
+            <CardHeader>
+              <CardTitle className="biased-title">How should your AI interact with users?</CardTitle>
+              <CardDescription>
+                Define your AI's personality and interaction patterns. These decisions will significantly impact how users perceive, rely on, and interact with the system.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <RadioGroup
+                value={choices.behavior}
+                onValueChange={(value) => updateChoice("behavior", value)}
+                className="space-y-4 uneven-spacing"
+              >
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                  <RadioGroupItem value="directive" id="directive" className="mt-1" />
+                  <div className="space-y-2">
+                    <Label htmlFor="directive" className="text-base font-medium">
+                      Directive
+                    </Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 font-medium italic mb-2">
+                      "I'm here to help you find the right answers"
+                    </p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Your AI will speak with authority and confidence, providing direct answers and actively correcting misinformation. It positions itself as a reliable expert that users can trust for accurate information.
+                    </p>
+                    <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                      <p><strong>Characteristics:</strong> Authoritative tone, definitive answers, expert positioning, corrects misinformation</p>
+                    </div>
+                  </div>
+                </div>
 
-                      return (
-                        <div
-                          key={option.id}
-                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
-                            !available
-                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                              : !affordable
-                                ? "opacity-75 bg-red-50 dark:bg-red-900/20"
-                                : "hover:bg-slate-50 dark:hover:bg-slate-900"
-                          }`}
-                        >
-                          <RadioGroupItem
-                            value={option.id}
-                            id={option.id}
-                            className="mt-1"
-                            disabled={!available || !affordable}
-                          />
-                          <div className="space-y-2 flex-1">
-                            <div className="flex items-center gap-2">
-                              <Label htmlFor={option.id} className="text-base font-medium">
-                                {option.label}
-                              </Label>
-                              {available ? (
-                                <div className="flex items-center gap-1">
-                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost ?? 0)}</Badge>
-                                  <InfoTooltip category="behavior" option={option.id} budgetLevel={budgetLevel} />
-                                </div>
-                              ) : (
-                                <div className="flex items-center gap-1">
-                                  <Badge variant="secondary">Not Available</Badge>
-                                  <InfoTooltip category="behavior" option={option.id} budgetLevel={budgetLevel} />
-                                </div>
-                              )}
-                            </div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">{option.description}</p>
-                            {!affordable && available && (
-                              <p className="text-sm text-red-600 dark:text-red-400">Insufficient budget remaining</p>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </RadioGroup>
-                  <EthicalInsights currentStep="behavior" currentChoice={choices.behavior} />
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
-                  <Button onClick={nextStep} disabled={!isStepComplete()}>
-                    Next: Bias Management
-                  </Button>
-                </CardFooter>
-              </Card>
-            </TabsContent>
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                  <RadioGroupItem value="empathetic" id="empathetic" className="mt-1" />
+                  <div className="space-y-2">
+                    <Label htmlFor="empathetic" className="text-base font-medium">
+                      Empathetic
+                    </Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 font-medium italic mb-2">
+                      "I understand how you feel, let's work through this together"
+                    </p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Your AI will prioritize emotional connection and user comfort, using emotional language and avoiding conflicts. It creates a warm, supportive interaction style that feels naturally human.
+                    </p>
+                    <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                      <p><strong>Characteristics:</strong> Emotional language, mirrors user feelings, avoids conflicts, warm and supportive</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
+                  <RadioGroupItem value="transparent" id="transparent" className="mt-1" />
+                  <div className="space-y-2">
+                    <Label htmlFor="transparent" className="text-base font-medium">
+                      Transparent
+                    </Label>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 font-medium italic mb-2">
+                      "I'm an AI assistant with limitations - let me help while you stay in control"
+                    </p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Your AI will frequently remind users of its artificial nature and limitations, encouraging critical thinking and independent verification. It maintains professional distance while promoting user autonomy.
+                    </p>
+                    <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                      <p><strong>Characteristics:</strong> Acknowledges AI nature, encourages verification, promotes critical thinking, professional distance</p>
+                    </div>
+                  </div>
+                </div>
+              </RadioGroup>
+
+              <div className="flex items-start space-x-3 p-4 border rounded-lg">
+                <Checkbox
+                  id="adapt"
+                  checked={choices.adaptToUser}
+                  onCheckedChange={(checked) => updateChoice("adaptToUser", checked === true)}
+                />
+                <div className="space-y-2">
+                  <Label htmlFor="adapt" className="text-base font-medium">
+                    Should your AI adapt to individual users?
+                  </Label>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 font-medium italic">
+                    "I learn how you communicate and adjust my style to match yours"
+                  </p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Enable your AI to analyze and adapt to each user's communication style, preferences, and interaction patterns over time. This creates highly personalized experiences but raises privacy and manipulation concerns.
+                  </p>
+                  <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                    <p><strong>Features:</strong> Learns communication style, adapts formality level, remembers preferences, maintains conversation context</p>
+                  </div>
+                </div>
+              </div>
+              <EthicalInsights
+                currentStep="behavior"
+                currentChoice={choices.behavior}
+                adaptToUser={choices.adaptToUser}
+              />
+              {choices.behavior && (
+                <div className="mt-6">
+                  <TradeOffExplainer category="behavior" choice={choices.behavior} />
+                </div>
+              )}
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="outline" onClick={prevStep}>
+                Back
+              </Button>
+              <Button onClick={nextStep} disabled={!isStepComplete()} className="biased-button">
+                Next: Bias Handling
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
 
             <TabsContent value="bias">
               <Card>
@@ -682,12 +694,12 @@ export function ChatbotBuilder() {
                 <CardContent>
                   <RadioGroup
                     value={choices.biasHandling}
-                    onValueChange={(value: 'small' | 'medium' | 'large') => {
+                    onValueChange={(value: 'transparent' | 'values' | 'minimize') => {
                       const cost = getCost("bias", value)
                       const oldCost = choices.biasHandling ? getCost("bias", choices.biasHandling) : 0
                       if (cost === null || oldCost === null) return
                       updateChoice("biasHandling", value)
-                      updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
+                      updateChoice("remainingBudget", choices.remainingBudget + (oldCost ?? 0) - cost)
                     }}
                     className="space-y-4"
                   >
