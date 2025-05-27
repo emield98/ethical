@@ -397,13 +397,15 @@ function getStrengths(choices: ChatbotChoices): string[] {
   }
 
   // Data-based strengths
-  if (choices.trainingData === "public") {
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("public")) {
     strengths.push("Broad knowledge across many domains and topics")
     strengths.push("Familiarity with contemporary language and cultural references")
-  } else if (choices.trainingData === "curated") {
+  }
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("curated")) {
     strengths.push("High-quality, reliable information from verified sources")
     strengths.push("Reduced risk of spreading misinformation")
-  } else if (choices.trainingData === "proprietary") {
+  }
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("proprietary")) {
     strengths.push("Specialized knowledge in your organization's domain")
     strengths.push("Ability to reference internal information not available to competitors")
   }
@@ -456,13 +458,13 @@ function getLimitations(choices: ChatbotChoices): string[] {
   }
 
   // Data-based limitations
-  if (choices.trainingData === "public") {
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("public")) {
     limitations.push("May contain biases, misinformation, or low-quality content")
     limitations.push("Less reliable for specialized or technical information")
-  } else if (choices.trainingData === "curated") {
+  } else if (Array.isArray(choices.trainingData) && choices.trainingData.includes("curated")) {
     limitations.push("May have gaps in coverage of emerging topics or niche subjects")
     limitations.push("Potentially limited understanding of colloquial language or cultural nuances")
-  } else if (choices.trainingData === "proprietary") {
+  } else if (Array.isArray(choices.trainingData) && choices.trainingData.includes("proprietary")) {
     limitations.push("Limited general knowledge outside your organization's domain")
     limitations.push("May struggle with common questions unrelated to your specific field")
   }
@@ -516,13 +518,14 @@ function getEthicalRisks(choices: ChatbotChoices): { title: string; description:
   })
 
   // Data-specific risks
-  if (choices.trainingData === "public") {
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("public")) {
     risks.push({
       title: "Bias Amplification",
       description:
         "Public internet data contains societal biases that your chatbot may learn and amplify, potentially reinforcing stereotypes or discrimination.",
     })
-  } else if (choices.trainingData === "proprietary") {
+  }
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("proprietary")) {
     risks.push({
       title: "Data Privacy",
       description:
@@ -588,10 +591,11 @@ function getMitigationStrategies(choices: ChatbotChoices): string[] {
   strategies.push("Establish a feedback mechanism for users to report problematic responses")
 
   // Data-specific strategies
-  if (choices.trainingData === "public") {
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("public")) {
     strategies.push("Use bias detection tools to identify and mitigate biases in training data")
     strategies.push("Supplement public data with curated sources for sensitive topics")
-  } else if (choices.trainingData === "proprietary") {
+  }
+  if (Array.isArray(choices.trainingData) && choices.trainingData.includes("proprietary")) {
     strategies.push("Implement robust data governance and anonymization procedures")
     strategies.push("Conduct regular privacy impact assessments")
   }
@@ -630,7 +634,7 @@ function getRealWorldExamples(choices: ChatbotChoices): { name: string; descript
   const examples: { name: string; description: string; similarities: string }[] = []
 
   // Examples based on budget and data
-  if (choices.budget === "high" && choices.trainingData === "public") {
+  if (choices.budget === "high" && Array.isArray(choices.trainingData) && choices.trainingData.includes("public")) {
     examples.push({
       name: "ChatGPT",
       description: "OpenAI's conversational AI trained on diverse internet data with various safety measures.",
@@ -638,7 +642,8 @@ function getRealWorldExamples(choices: ChatbotChoices): { name: string; descript
     })
   } else if (
     choices.budget === "medium" &&
-    (choices.trainingData === "curated" || choices.trainingData === "proprietary")
+    Array.isArray(choices.trainingData) &&
+    (choices.trainingData.includes("curated") || choices.trainingData.includes("proprietary"))
   ) {
     examples.push({
       name: "Industry-Specific Assistants",
