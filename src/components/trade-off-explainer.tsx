@@ -1,7 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { Scale } from "lucide-react"
 
 interface TradeOff {
   title: string
@@ -15,17 +18,19 @@ const tradeOffs: Record<string, TradeOff> = {
     title: "Public Internet Data",
     description: "Using data scraped from the public internet, including websites, forums, and social media.",
     pros: [
+      "Represents a lot of unfiltered viewpoints",
       "Broad coverage of topics and domains",
-      "Includes contemporary language and cultural references",
+      "Includes contemporary language",
       "Relatively inexpensive to obtain",
-      "Represents diverse viewpoints (though not necessarily in balanced proportions)",
+      "Large amount of data"
     ],
     cons: [
+      "Represents a lot of unfiltered viewpoints",
       "Contains biases present in internet content",
       "Quality varies dramatically across sources",
       "May include harmful, misleading, or offensive content",
       "Difficult to verify accuracy of all information",
-      "May violate copyright or terms of service when scraped",
+      "May violate copyright (not that big tech cares)",
     ],
   },
   "data-curated": {
@@ -46,20 +51,18 @@ const tradeOffs: Record<string, TradeOff> = {
     ],
   },
   "data-proprietary": {
-    title: "Proprietary/Internal Data",
+    title: "Proprietary Data",
     description:
-      "Using your organization's internal documents, customer interactions, and domain-specific information.",
+      "Using websites like Outlier AI or Amazon Mechanical Turk to pay people to answer questions, write prompts, and other forms of human verified data.",
     pros: [
-      "Highly relevant to your specific domain",
-      "Contains unique information not available to competitors",
-      "Can create competitive advantage through specialization",
-      "Better alignment with your organization's terminology and processes",
+      "Highest quality data",
+      "Tons of control over the data",
+      "Data sourced from here will obviously be free of hate speech or other offensive content",
     ],
     cons: [
-      "Limited general knowledge outside your domain",
-      "Raises privacy concerns if not properly anonymized",
-      "May perpetuate existing biases in your organization",
-      "Requires careful data governance and security",
+      "Super expensive and time-consuming to collect",
+      "May overrepresent certain perspectives (e.g., academic viewpoints)",
+      "Can result in unnoticed issues in the data, like the workers being biased towards certain topics",
     ],
   },
   "filtering-strict": {
@@ -238,6 +241,7 @@ interface TradeOffExplainerProps {
 }
 
 export function TradeOffExplainer({ category, choice }: TradeOffExplainerProps) {
+  const [expanded, setExpanded] = useState(false)
   const tradeOffKey = `${category}-${choice}`
   const tradeOff = tradeOffs[tradeOffKey]
 
@@ -246,9 +250,12 @@ export function TradeOffExplainer({ category, choice }: TradeOffExplainerProps) 
   }
 
   return (
-    <Card className="biased-card">
-      <CardHeader>
-        <CardTitle className="biased-title">Understanding Trade-offs</CardTitle>
+    <Card className="mt-6">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg flex items-center gap-2">
+          <Scale className="h-5 w-5 text-blue-600 dark:text-blue-500" />
+          Understanding Trade-offs
+        </CardTitle>
         <CardDescription>
           Every choice in AI development involves trade-offs. Here's what you should consider about your selection:
         </CardDescription>
@@ -260,44 +267,61 @@ export function TradeOffExplainer({ category, choice }: TradeOffExplainerProps) 
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{tradeOff.description}</p>
           </div>
 
-          <Tabs defaultValue="pros" className="biased-tabs">
-            <TabsList className="grid w-full grid-cols-2 biased-tabs-list">
-              <TabsTrigger value="pros" className="biased-tab">
-                Advantages
-              </TabsTrigger>
-              <TabsTrigger value="cons" className="biased-tab">
-                Limitations
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="pros" className="pt-4">
-              <ul className="space-y-2 uneven-spacing">
-                {tradeOff.pros.map((pro, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-green-600 dark:text-green-400 font-bold">+</span>
-                    <span className="text-sm">{pro}</span>
-                  </li>
-                ))}
-              </ul>
-            </TabsContent>
-            <TabsContent value="cons" className="pt-4">
-              <ul className="space-y-2 uneven-spacing">
-                {tradeOff.cons.map((con, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-red-600 dark:text-red-400 font-bold">−</span>
-                    <span className="text-sm">{con}</span>
-                  </li>
-                ))}
-              </ul>
-            </TabsContent>
-          </Tabs>
+          <div className={`${!expanded && (tradeOff.pros.length > 2 || tradeOff.cons.length > 2) ? "max-h-64 overflow-hidden relative" : ""}`}>
+            <Tabs defaultValue="pros" className="biased-tabs">
+              <TabsList className="grid w-full grid-cols-2 biased-tabs-list">
+                <TabsTrigger value="pros" className="biased-tab">
+                  Advantages
+                </TabsTrigger>
+                <TabsTrigger value="cons" className="biased-tab">
+                  Limitations
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="pros" className="pt-4">
+                <ul className="space-y-2 uneven-spacing">
+                  {tradeOff.pros.map((pro, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 font-bold">+</span>
+                      <span className="text-sm">{pro}</span>
+                    </li>
+                  ))}
+                </ul>
+              </TabsContent>
+              <TabsContent value="cons" className="pt-4">
+                <ul className="space-y-2 uneven-spacing">
+                  {tradeOff.cons.map((con, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-red-600 dark:text-red-400 font-bold">−</span>
+                      <span className="text-sm">{con}</span>
+                    </li>
+                  ))}
+                </ul>
+              </TabsContent>
+            </Tabs>
 
-          <div className="pt-4 text-sm text-slate-600 dark:text-slate-400">
-            <p>
-              <strong>Key insight:</strong> In AI development, there are rarely perfect choices—only different sets of
-              trade-offs. Understanding these trade-offs is essential for making informed decisions that align with your
-              goals and values.
-            </p>
+            <div className="pt-4 text-sm text-slate-600 dark:text-slate-400">
+              <p>
+                <strong>Key insight:</strong> In AI development, there are rarely perfect choices—only different sets of
+                trade-offs. Understanding these trade-offs is essential for making informed decisions that align with your
+                goals and values.
+              </p>
+            </div>
+            
+            {!expanded && (tradeOff.pros.length > 2 || tradeOff.cons.length > 2) && (
+              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white dark:from-slate-950 to-transparent" />
+            )}
           </div>
+          
+          {(tradeOff.pros.length > 2 || tradeOff.cons.length > 2) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setExpanded(!expanded)}
+              className="mt-2 text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+            >
+              {expanded ? "Show less" : "Show more"}
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

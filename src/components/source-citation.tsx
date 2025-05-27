@@ -56,9 +56,9 @@ export function Source({
           </TooltipTrigger>
           <TooltipContent side={tooltipSide} className="p-3 max-w-xs">
             <div className="space-y-1.5">
-              <p className="font-medium">{name}</p>
-              {description && <p className="text-xs opacity-90">{description}</p>}
-              {date && <p className="text-xs opacity-75">Published: {date}</p>}
+              <span className="font-medium block">{name}</span>
+              {description && <span className="text-xs opacity-90 block">{description}</span>}
+              {date && <span className="text-xs opacity-75 block">Published: {date}</span>}
               {url && (
                 <div className="flex items-center gap-2 pt-1">
                   <a 
@@ -79,14 +79,14 @@ export function Source({
   }
 
   return (
-    <div className={cn("flex items-start gap-2 text-sm text-slate-500 dark:text-slate-400 p-2 border border-slate-200 dark:border-slate-800 rounded-md bg-slate-50 dark:bg-slate-900/50 mt-2", className)}>
+    <span className={cn("flex items-start gap-2 text-sm text-slate-500 dark:text-slate-400 p-2 border border-slate-200 dark:border-slate-800 rounded-md bg-slate-50 dark:bg-slate-900/50 mt-2 block", className)}>
       <Info className="h-4 w-4 mt-0.5 text-slate-400 dark:text-slate-500" />
-      <div className="space-y-1 flex-1">
-        <p className="font-medium text-slate-700 dark:text-slate-300">{name}</p>
-        {description && <p className="text-xs">{description}</p>}
-        {date && <p className="text-xs opacity-75">Published: {date}</p>}
+      <span className="space-y-1 flex-1 block">
+        <span className="font-medium text-slate-700 dark:text-slate-300 block">{name}</span>
+        {description && <span className="text-xs block">{description}</span>}
+        {date && <span className="text-xs opacity-75 block">Published: {date}</span>}
         {url && (
-          <div className="flex items-center gap-2 pt-1">
+          <span className="flex items-center gap-2 pt-1 block">
             <a 
               href={url} 
               target="_blank" 
@@ -103,9 +103,9 @@ export function Source({
             >
               {copied ? "Copied!" : "Copy link"}
             </Button>
-          </div>
+          </span>
         )}
-      </div>
-    </div>
+      </span>
+    </span>
   )
 }

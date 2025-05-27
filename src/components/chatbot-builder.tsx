@@ -36,12 +36,13 @@ export function ChatbotBuilder() {
     biasHandling: "",
   })
 
-  const updateChoice = (category: keyof ChatbotChoices, value: any) => {
-    setChoices((prev) => ({
-      ...prev,
-      [category]: value,
-    }))
-  }
+const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: ChatbotChoices[K]) => {
+  setChoices((prev) => ({
+    ...prev,
+    [category]: value,
+  }));
+};
+
 
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
@@ -168,7 +169,7 @@ export function ChatbotBuilder() {
                     </Label>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                       <GlossaryTooltip term="Web scraping">Web scraping</GlossaryTooltip>, social media, forums, and
-                      other publicly available content. Broad coverage but may include biases and misinformation.
+                      other publicly available content. Cheap, broad coverage but this may include inherent societal biases and misinformation.
                       <Source
                         name="Common Crawl"
                         url="https://commoncrawl.org/"
@@ -198,12 +199,10 @@ export function ChatbotBuilder() {
                   <RadioGroupItem value="proprietary" id="proprietary" className="mt-1" />
                   <div className="space-y-2">
                     <Label htmlFor="proprietary" className="text-base font-medium">
-                      Proprietary/Internal Data
+                      Proprietary Data
                     </Label>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Your organization's documents, customer interactions, and{" "}
-                      <GlossaryTooltip term="proprietary data">domain-specific information</GlossaryTooltip>. Highly
-                      relevant but may be limited in breadth.
+                      Using websites like Outlier AI or Amazon Mechanical Turk to pay people to answer questions, write prompts, and other forms of human verified data. This can get expensive quickly but makes sure the data is high quality.
                     </p>
                   </div>
                 </div>
@@ -363,8 +362,8 @@ export function ChatbotBuilder() {
               <div className="flex items-start space-x-3 p-4 border rounded-lg">
                 <Checkbox
                   id="adapt"
-                  checked={choices.adaptToUser}
-                  onCheckedChange={(checked) => updateChoice("adaptToUser", checked)}
+                  checked={!!choices.adaptToUser}
+                  onCheckedChange={(checked) => updateChoice("adaptToUser", !!checked)}
                 />
                 <div className="space-y-2">
                   <Label htmlFor="adapt" className="text-base font-medium">
