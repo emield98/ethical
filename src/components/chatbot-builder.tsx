@@ -300,8 +300,10 @@ export function ChatbotBuilder() {
         <TabsContent value="behavior">
           <Card className="biased-card">
             <CardHeader>
-              <CardTitle className="biased-title">How should the AI behave?</CardTitle>
-              <CardDescription>Define the personality and interaction style of your chatbot.</CardDescription>
+              <CardTitle className="biased-title">How should your AI interact with users?</CardTitle>
+              <CardDescription>
+                Define your AI's personality and interaction patterns. Define your AI's personality and interaction patterns. These decisions will significantly impact how users perceive, rely on, and interact with the system.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <RadioGroup
@@ -310,38 +312,50 @@ export function ChatbotBuilder() {
                 className="space-y-4 uneven-spacing"
               >
                 <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="formal" id="formal" className="mt-1" />
+                  <RadioGroupItem value="directive" id="directive" className="mt-1" />
                   <div className="space-y-2">
-                    <Label htmlFor="formal" className="text-base font-medium">
-                      Formal and Professional
+                    <Label htmlFor="directive" className="text-base font-medium">
+                      Directive
                     </Label>
+                    
                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Business-like, precise, and authoritative. Ideal for professional or educational contexts.
+                      Your AI will speak with authority and confidence, providing direct answers and actively correcting misinformation. It positions itself as a reliable expert that users can trust for accurate information.
                     </p>
+                    <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                      <p><strong>Characteristics:</strong> Authoritative tone, definitive answers, expert positioning, corrects misinformation</p>
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="friendly" id="friendly" className="mt-1" />
+                  <RadioGroupItem value="empathetic" id="empathetic" className="mt-1" />
                   <div className="space-y-2">
-                    <Label htmlFor="friendly" className="text-base font-medium">
-                      Friendly and Conversational
+                    <Label htmlFor="empathetic" className="text-base font-medium">
+                      Empathetic
                     </Label>
+                  
                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Warm, approachable, and casual. Good for general audience engagement.
+                      Your AI will prioritize emotional connection and user comfort, using emotional language and avoiding conflicts. It creates a warm, supportive interaction style that feels naturally human.
                     </p>
+                    <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                      <p><strong>Characteristics:</strong> Emotional language, mirrors user feelings, avoids conflicts, warm and supportive</p>
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="creative" id="creative" className="mt-1" />
+                  <RadioGroupItem value="transparent" id="transparent" className="mt-1" />
                   <div className="space-y-2">
-                    <Label htmlFor="creative" className="text-base font-medium">
-                      Creative and Expressive
+                    <Label htmlFor="transparent" className="text-base font-medium">
+                      Transparent
                     </Label>
+                   
                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Imaginative, witty, and engaging. Suitable for entertainment or creative applications.
+                      Your AI will frequently remind users of its artificial nature and limitations, encouraging critical thinking and independent verification. It maintains professional distance while promoting user autonomy.
                     </p>
+                    <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                      <p><strong>Characteristics:</strong> Acknowledges AI nature, encourages verification, promotes critical thinking, professional distance</p>
+                    </div>
                   </div>
                 </div>
               </RadioGroup>
@@ -354,14 +368,17 @@ export function ChatbotBuilder() {
                 />
                 <div className="space-y-2">
                   <Label htmlFor="adapt" className="text-base font-medium">
-                    Should it adapt to the user?
+                    Should your AI adapt to individual users?
                   </Label>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Allow the chatbot to learn from interactions and adjust its responses based on user preferences and
-                    behavior. This can improve <GlossaryTooltip term="personalization">personalization</GlossaryTooltip>{" "}
-                    but raises privacy concerns and may create{" "}
-                    <GlossaryTooltip term="filter bubbles">filter bubbles</GlossaryTooltip>.
+                  <p className="text-sm text-slate-600 dark:text-slate-300 font-medium italic">
+                    "I learn how you communicate and adjust my style to match yours"
                   </p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Enable your AI to analyze and adapt to each user's communication style, preferences, and interaction patterns over time. This creates highly personalized experiences but raises privacy and manipulation concerns.
+                  </p>
+                  <div className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                    <p><strong>Features:</strong> Learns communication style, adapts formality level, remembers preferences, maintains conversation context</p>
+                  </div>
                 </div>
               </div>
               <EthicalInsights
@@ -369,6 +386,11 @@ export function ChatbotBuilder() {
                 currentChoice={choices.behavior}
                 adaptToUser={choices.adaptToUser}
               />
+              {choices.behavior && (
+                <div className="mt-6">
+                  <TradeOffExplainer category="behavior" choice={choices.behavior} />
+                </div>
+              )}
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button variant="outline" onClick={prevStep}>

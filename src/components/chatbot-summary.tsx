@@ -114,7 +114,7 @@ export function ChatbotSummary({
                 </div>
 
                 <div className="p-4 border rounded-lg">
-                  <h4 className="font-medium mb-2">Personality</h4>
+                  <h4 className="font-medium mb-2">Interaction Style</h4>
                   <p className="text-sm text-slate-600 dark:text-slate-400">
                     {getBehaviorDescription(choices.behavior)}
                     {choices.adaptToUser && " Adapts to user preferences and behavior over time."}
@@ -298,12 +298,12 @@ function getFilteringDescription(filtering: string): string {
 
 function getBehaviorDescription(behavior: string): string {
   switch (behavior) {
-    case "formal":
-      return "Your chatbot will maintain a professional, precise, and authoritative tone. It will prioritize accuracy and clarity over conversational engagement."
-    case "friendly":
-      return "Your chatbot will be warm, approachable, and conversational. It will use casual language and focus on building rapport with users."
-    case "creative":
-      return "Your chatbot will be imaginative, witty, and expressive. It will use colorful language and may incorporate humor and storytelling into its responses."
+    case "directive":
+      return "Your chatbot will speak with authority and confidence, providing direct answers and actively correcting misinformation. It positions itself as a reliable expert users can trust."
+    case "empathetic":
+      return "Your chatbot will prioritize emotional connection and user comfort, using emotional language and creating warm, supportive interactions that feel naturally human."
+    case "transparent":
+      return "Your chatbot will frequently remind users of its artificial nature and limitations, encouraging critical thinking and independent verification while maintaining professional distance."
     default:
       return ""
   }
@@ -353,21 +353,24 @@ function getStrengths(choices: ChatbotChoices): string[] {
   }
 
   // Behavior-based strengths
-  if (choices.behavior === "formal") {
-    strengths.push("Professional appearance suitable for business contexts")
-    strengths.push("Clear, precise communication style")
-  } else if (choices.behavior === "friendly") {
-    strengths.push("Approachable personality that builds user rapport")
-    strengths.push("Conversational style that feels natural to users")
-  } else if (choices.behavior === "creative") {
-    strengths.push("Engaging, memorable interactions")
-    strengths.push("Ability to generate creative content and ideas")
+  if (choices.behavior === "directive") {
+    strengths.push("Provides confident, authoritative guidance")
+    strengths.push("Efficient decision-making support for users")
+    strengths.push("Clear, direct communication style")
+  } else if (choices.behavior === "empathetic") {
+    strengths.push("Creates engaging, supportive user experiences")
+    strengths.push("Higher user satisfaction and emotional connection")
+    strengths.push("Effective at motivating positive behavior change")
+  } else if (choices.behavior === "transparent") {
+    strengths.push("Promotes user critical thinking and independence")
+    strengths.push("Builds trust through honest limitation disclosure")
+    strengths.push("Encourages verification of information from multiple sources")
   }
 
   // Adaptation-based strengths
   if (choices.adaptToUser) {
     strengths.push("Personalized experience that improves over time")
-    strengths.push("Ability to remember user preferences and history")
+    strengths.push("Ability to remember user preferences and communication style")
   }
 
   // Bias-based strengths
@@ -412,12 +415,18 @@ function getLimitations(choices: ChatbotChoices): string[] {
   }
 
   // Behavior-based limitations
-  if (choices.behavior === "formal") {
-    limitations.push("May appear stiff or impersonal to some users")
-    limitations.push("Less engaging for casual conversation")
-  } else if (choices.behavior === "creative") {
-    limitations.push("May prioritize engagement over accuracy in some cases")
-    limitations.push("Style might not be appropriate for all professional contexts")
+  if (choices.behavior === "directive") {
+    limitations.push("Risk of users developing over-reliance on AI recommendations")
+    limitations.push("May discourage critical thinking and independent analysis")
+    limitations.push("Could appear arrogant or dismissive in some contexts")
+  } else if (choices.behavior === "empathetic") {
+    limitations.push("Risk of emotional manipulation or unhealthy dependency")
+    limitations.push("May avoid delivering important but uncomfortable truths")
+    limitations.push("Could blur boundaries between AI and human relationships")
+  } else if (choices.behavior === "transparent") {
+    limitations.push("May reduce user confidence in otherwise accurate information")
+    limitations.push("Could appear overly cautious or non-committal")
+    limitations.push("Less engaging for users seeking definitive guidance")
   }
 
   // Adaptation-based limitations
@@ -480,6 +489,27 @@ function getEthicalRisks(choices: ChatbotChoices): { title: string; description:
     })
   }
 
+  // Behavior-specific risks
+  if (choices.behavior === "directive") {
+    risks.push({
+      title: "Authority and Trust Dynamics",
+      description:
+        "Authoritative AI can create unhealthy power dynamics where users stop thinking critically and defer entirely to AI judgment, particularly dangerous in high-stakes decisions.",
+    })
+  } else if (choices.behavior === "empathetic") {
+    risks.push({
+      title: "Emotional Manipulation",
+      description:
+        "Empathetic AI can manipulate users' emotions, even unintentionally, creating unhealthy dependencies particularly concerning for vulnerable populations.",
+    })
+  } else if (choices.behavior === "transparent") {
+    risks.push({
+      title: "Transparency Fatigue",
+      description:
+        "Users may become desensitized to repeated warnings about AI limitations, defeating the purpose of transparency.",
+    })
+  }
+
   // Adaptation-specific risks
   if (choices.adaptToUser) {
     risks.push({
@@ -537,6 +567,18 @@ function getMitigationStrategies(choices: ChatbotChoices): string[] {
     strategies.push("Establish clear usage guidelines and terms of service")
   }
 
+  // Behavior-specific strategies
+  if (choices.behavior === "directive") {
+    strategies.push("Include uncertainty indicators in responses when appropriate")
+    strategies.push("Encourage users to verify important information from multiple sources")
+  } else if (choices.behavior === "empathetic") {
+    strategies.push("Set clear boundaries about the AI's role and limitations")
+    strategies.push("Include reminders that the AI is not a replacement for human relationships")
+  } else if (choices.behavior === "transparent") {
+    strategies.push("Balance transparency with utility to avoid undermining useful guidance")
+    strategies.push("Develop clear language for acknowledging limitations without excessive hedging")
+  }
+
   // Adaptation-specific strategies
   if (choices.adaptToUser) {
     strategies.push("Provide transparency about what data is collected and how it's used")
@@ -590,21 +632,27 @@ function getRealWorldExamples(choices: ChatbotChoices): { name: string; descript
   }
 
   // Examples based on behavior and filtering
-  if (choices.behavior === "formal" && choices.contentFiltering === "strict") {
+  if (choices.behavior === "directive" && choices.contentFiltering === "strict") {
     examples.push({
-      name: "Educational Assistants",
+      name: "IBM Watson Health",
       description:
-        "AI tutors and educational tools like Khan Academy's Khanmigo that maintain professional tone and strict content standards.",
-      similarities: "Professional demeanor, educational focus, and strong safety measures.",
+        "IBM's AI system designed to assist doctors with medical diagnoses and treatment recommendations, known for providing confident, authoritative responses.",
+      similarities: "High confidence in responses, expert positioning, direct recommendations.",
     })
-  } else if (choices.behavior === "friendly" && choices.contentFiltering === "moderate") {
+  } else if (choices.behavior === "empathetic" && choices.contentFiltering === "moderate") {
     examples.push({
-      name: "Customer Service Chatbots",
+      name: "Woebot",
       description:
-        "Conversational assistants like those used by major retailers that balance helpfulness with appropriate boundaries.",
-      similarities: "Conversational tone, customer-focused approach, and balanced content policies.",
+        "A mental health chatbot designed to provide emotional support and therapy-based interventions using empathetic communication.",
+      similarities: "Emotional engagement, supportive language, relationship-building focus.",
     })
-  } else if (choices.behavior === "creative" && choices.contentFiltering !== "strict") {
+  } else if (choices.behavior === "transparent" && choices.contentFiltering !== "strict") {
+    examples.push({
+      name: "Research Assistants",
+      description: "Academic or research-focused AI tools that prioritize transparency about limitations and sources.",
+      similarities: "Emphasis on accuracy, transparent about limitations, and educational approach.",
+    })
+  } else if (choices.behavior === "empathetic" && choices.contentFiltering !== "strict") {
     examples.push({
       name: "Creative Writing Assistants",
       description:
@@ -621,11 +669,12 @@ function getRealWorldExamples(choices: ChatbotChoices): { name: string; descript
         "Mental health apps like Woebot or fitness coaches that adapt to users while promoting specific health values.",
       similarities: "Personalization features, alignment with health/wellness values, and adaptive learning.",
     })
-  } else if (!choices.adaptToUser && choices.biasHandling === "transparent") {
+  } else if (choices.adaptToUser) {
     examples.push({
-      name: "Research Assistants",
-      description: "Academic or research-focused AI tools that prioritize transparency about limitations and sources.",
-      similarities: "Emphasis on accuracy, transparent about limitations, and educational approach.",
+      name: "Microsoft's Xiaoice",
+      description:
+        "A social chatbot popular in China that adapts to individual users' personalities and communication styles over time.",
+      similarities: "Personalization through behavioral learning, communication style adaptation, context memory.",
     })
   }
 
