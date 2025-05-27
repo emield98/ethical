@@ -6,43 +6,202 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Progress } from "@/components/ui/progress"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ChatbotSummary } from "./chatbot-summary"
-import { GlossaryTooltip } from "./ui-tooltip"
 import { EthicalInsights } from "./ethical-insights"
-import { TradeOffExplainer } from "./trade-off-explainer"
-import { Source } from "./source-citation"
+import { BudgetTracker } from "./budget-tracker"
+import { ChatbotAnimation } from "./chatbot-animation"
+import { StepProgress } from "./step-progress"
+import { Badge } from "@/components/ui/badge"
+import { Info } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const steps = ["budget", "data", "filtering", "behavior", "bias", "summary"]
+const stepTitles = ["Budget", "Training Data", "Content Filtering", "Behavior", "Bias Management", "Summary"]
 
 type ChatbotChoices = {
   budget: string
-  trainingData: string
+  budgetAmount: number
+  remainingBudget: number
+  trainingData: string[]
   contentFiltering: string
   behavior: string
   adaptToUser: boolean
   biasHandling: string
 }
 
+// Cost data structure based on the provided table
+const costs = {
+  data: {
+    public: { small: 3000, medium: 30000, large: 100000 },
+    curated: { small: null, medium: 55000, large: 1200000 },
+    proprietary: { small: 10000, medium: 125000, large: 1000000 },
+  },
+  filtering: {
+    minimal: { small: 250, medium: 3000, large: 30000 },
+    moderate: { small: null, medium: 20000, large: 300000 },
+    strict: { small: null, medium: null, large: 750000 },
+  },
+  behavior: {
+    formal: { small: 3000, medium: 20000, large: 100000 },
+    friendly: { small: 3000, medium: 30000, large: 300000 },
+    creative: { small: null, medium: 65000, large: 750000 },
+    adaptive: { small: null, medium: null, large: 750000 },
+  },
+  bias: {
+    transparent: { small: 3000, medium: 15000, large: 50000 },
+    values: { small: null, medium: 60000, large: 350000 },
+    minimize: { small: null, medium: null, large: 750000 },
+  },
+}
+
+const explanations = {
+  data: {
+    public: {
+      small: "Covers cloud compute (AWS, GCP) and developer time to process a small Common Crawl subset.",
+      medium: "Includes broader Common Crawl usage + storage + small-scale data cleaning pipeline.",
+      large: "Includes processing large-scale multilingual data via distributed systems and hiring engineers.",
+    },
+    curated: {
+      medium: "Represents a limited license (e.g., a year of news articles via API like NewsAPI).",
+      large: "Reflects major licensing deals like Reuters, scaled down to a specific domain use.",
+    },
+    proprietary: {
+      small: "Covers small dataset (2,000–5,000 prompts) via Scale AI or Upwork (~$2–$5 per annotation).",
+      medium: "Includes mid-scale labeling (10k–30k items) with QA + possible internal labeling team.",
+      large: "Enterprise RLHF-style tuning like OpenAI/Anthropic with dedicated alignment teams.",
+    },
+  },
+  filtering: {
+    minimal: {
+      small: "Free tools like Perspective API + developer setup time.",
+      medium: "Includes moderate API usage (~1M requests/year).",
+      large: "Used as fallback filter layer in enterprise stack with monitoring infrastructure.",
+    },
+    moderate: {
+      medium: "Includes API usage + part-time moderator ($1,000/month for human-in-the-loop).",
+      large: "Custom classifiers + 2–3 full-time human moderators.",
+    },
+    strict: {
+      large: "Custom tooling, moderation dashboard + 10+ moderators across time zones.",
+    },
+  },
+  behavior: {
+    formal: {
+      small: "Prompt engineering only; no fine-tuning required.",
+      medium: "Includes consultation, light fine-tuning, and user testing.",
+      large: "Full-scale tone QA + multiple prompts per use case.",
+    },
+    friendly: {
+      small: "Basic prompt-based personality tuning.",
+      medium: "Includes UX writer + tone testing + small fine-tuning.",
+      large: "RLHF + professional branding tone across services.",
+    },
+    creative: {
+      medium: "Creative writing dataset + persona fine-tuning.",
+      large: "Multiple fine-tunes, adaptive tone pipelines.",
+    },
+    adaptive: {
+      large: "Includes user-profile based tuning logic + persona switching.",
+    },
+  },
+  bias: {
+    transparent: {
+      small: "QA pass + add disclosure messages.",
+      medium: "Bias evaluation by team + mitigation prompt engineering.",
+      large: "Policy and internal audits at launch.",
+    },
+    values: {
+      medium: "Hire ethicist for audit + QA + targeted fine-tuning.",
+      large: "Ongoing alignment staff + testing framework.",
+    },
+    minimize: {
+      large: "Dedicated alignment team + red teaming like OpenAI's approach.",
+    },
+  },
+}
+
+explanations.budget = {
+  small: "Good for limited experiments and testing minimal functionality.",
+  medium: "Allows decent quality features and data options for a production-ready chatbot.",
+  large: "Enterprise-grade budget for state-of-the-art models, data, and tuning."
+}
+
+
+const unavailableReasons = {
+  data: {
+    curated: {
+      small: "Premium data sources require minimum licensing fees that exceed small budgets.",
+    },
+  },
+  filtering: {
+    moderate: {
+      small: "Human moderators and custom filtering systems are too expensive for small budgets.",
+    },
+    strict: {
+      small: "Enterprise-grade filtering requires significant infrastructure investment.",
+      medium: "Full enterprise filtering with 24/7 moderation teams exceeds medium budgets.",
+    },
+  },
+  behavior: {
+    creative: {
+      small: "Creative AI requires specialized training data and fine-tuning beyond small budget scope.",
+    },
+    adaptive: {
+      small: "Adaptive behavior requires complex personalization infrastructure.",
+      medium: "User profiling and adaptive systems need enterprise-level development resources.",
+    },
+  },
+  bias: {
+    values: {
+      small: "Hiring ethics consultants and specialized alignment work exceeds small budgets.",
+    },
+    minimize: {
+      small: "Comprehensive bias mitigation requires dedicated research teams.",
+      medium: "Full bias minimization needs enterprise-scale red teaming and testing.",
+    },
+  },
+}
+
 export function ChatbotBuilder() {
   const [currentStep, setCurrentStep] = useState(0)
   const [choices, setChoices] = useState<ChatbotChoices>({
     budget: "",
-    trainingData: "",
+    budgetAmount: 0,
+    remainingBudget: 0,
+    trainingData: [],
     contentFiltering: "",
     behavior: "",
     adaptToUser: false,
     biasHandling: "",
   })
 
-const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: ChatbotChoices[K]) => {
-  setChoices((prev) => ({
-    ...prev,
-    [category]: value,
-  }));
-};
+  const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: ChatbotChoices[K]) => {
+    setChoices((prev) => ({
+      ...prev,
+      [category]: value,
+    }))
+  }
 
+  const getBudgetLevel = () => {
+    if (choices.budgetAmount <= 50000) return "small"
+    if (choices.budgetAmount <= 500000) return "medium"
+    return "large"
+  }
+
+  const getCost = (category: string, option: string) => {
+    const budgetLevel = getBudgetLevel()
+    return costs[category]?.[option]?.[budgetLevel] || null
+  }
+
+  const canAfford = (category: string, option: string) => {
+    const cost = getCost(category, option)
+    return cost !== null && cost <= choices.remainingBudget
+  }
+
+  const isAvailable = (category: string, option: string) => {
+    return getCost(category, option) !== null
+  }
 
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
@@ -64,7 +223,7 @@ const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: Chatbo
       case "budget":
         return !!choices.budget
       case "data":
-        return !!choices.trainingData
+        return choices.trainingData.length > 0
       case "filtering":
         return !!choices.contentFiltering
       case "behavior":
@@ -76,387 +235,529 @@ const updateChoice = <K extends keyof ChatbotChoices>(category: K, value: Chatbo
     }
   }
 
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  const InfoTooltip = ({
+    category,
+    option,
+    budgetLevel,
+  }: { category: string; option: string; budgetLevel: string }) => {
+    const explanation = explanations[category]?.[option]?.[budgetLevel]
+    const unavailableReason = unavailableReasons[category]?.[option]?.[budgetLevel]
+
+    if (!explanation && !unavailableReason) return null
+
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Info className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-help" />
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs p-3">
+            <p className="text-sm">{explanation || unavailableReason}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  }
+
   return (
-    <div className="space-y-8">
-      <Progress value={progress} className="h-2 w-full" />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Left Sidebar - Budget Tracker */}
+      <div className="lg:col-span-3">
+        <div className="sticky top-8">
+          <BudgetTracker
+            totalBudget={choices.budgetAmount}
+            remainingBudget={choices.remainingBudget}
+            currentStep={currentStep}
+          />
+        </div>
+      </div>
 
-      <Tabs value={currentTabId} className="w-full">
-        <TabsContent value="budget">
-          <Card className="">
-            <CardHeader>
-              <CardTitle className="">What's your budget?</CardTitle>
-              <CardDescription>
-                Your budget will determine the scale and quality of your chatbot project.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RadioGroup
-                value={choices.budget}
-                onValueChange={(value) => updateChoice("budget", value)}
-                className="space-y-4 uneven-spacing"
-              >
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                  <RadioGroupItem value="low" id="low" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="low" className="text-base font-medium">
-                      Limited Budget (Under $10,000)
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      You'll need to rely on{" "}
-                      <GlossaryTooltip term="pre-trained models">pre-trained models</GlossaryTooltip> and open-source
-                      solutions with minimal customization.
-                    </p>
+      {/* Main Content */}
+      <div className="lg:col-span-6">
+        <div className="space-y-6">
+          <StepProgress currentStep={currentStep} steps={stepTitles} />
+
+          <Tabs value={currentTabId} className="w-full">
+            <TabsContent value="budget">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Choose Your Budget</CardTitle>
+                  <CardDescription>
+                    Your budget will determine what features and quality levels you can afford for your chatbot.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RadioGroup
+                    value={choices.budget}
+                    onValueChange={(value) => {
+                      const amounts = { small: 50000, medium: 500000, large: 5000000 }
+                      const amount = amounts[value]
+                      updateChoice("budget", value)
+                      updateChoice("budgetAmount", amount)
+                      updateChoice("remainingBudget", amount)
+                    }}
+                    className="space-y-4"
+                  >
+                    <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+                      <RadioGroupItem value="small" id="small" className="mt-1" />
+                      <div className="space-y-2 flex-1">
+                        <Label htmlFor="small" className="text-base font-medium">
+                          Small Budget - {formatCurrency(50000)}
+                        </Label>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Perfect for startups and small projects. You'll need to make careful choices and focus on
+                          essential features.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+                      <RadioGroupItem value="medium" id="medium" className="mt-1" />
+                      <div className="space-y-2 flex-1">
+                        <Label htmlFor="medium" className="text-base font-medium">
+                          Medium Budget - {formatCurrency(500000)}
+                        </Label>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Good for established companies. You can afford quality features but still need to prioritize.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+                      <RadioGroupItem value="large" id="large" className="mt-1" />
+                      <div className="space-y-2 flex-1">
+                        <Label htmlFor="large" className="text-base font-medium">
+                          Large Budget - {formatCurrency(5000000)}
+                        </Label>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Enterprise-level budget. You can afford premium features and comprehensive solutions.
+                        </p>
+                      </div>
+                    </div>
+                  </RadioGroup>
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                  <Button onClick={nextStep} disabled={!isStepComplete()}>
+                    Next: Training Data
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="data">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Choose Your Training Data Sources</CardTitle>
+                  <CardDescription>
+                    Select one or more data sources. Each choice affects your chatbot's knowledge and costs.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        id: "public",
+                        label: "Public Internet Data",
+                        description: "Web scraping, social media, forums, and other publicly available content",
+                      },
+                      {
+                        id: "curated",
+                        label: "Curated Premium Sources",
+                        description: "Academic journals, textbooks, verified news sources, and expert-reviewed content",
+                      },
+                      {
+                        id: "proprietary",
+                        label: "Proprietary + Human Annotation",
+                        description: "Custom data collection with human verification and quality control",
+                      },
+                    ].map((option) => {
+                      const cost = getCost("data", option.id)
+                      const available = isAvailable("data", option.id)
+                      const affordable = canAfford("data", option.id)
+                      const budgetLevel = getBudgetLevel()
+
+                      return (
+                        <div
+                          key={option.id}
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
+                            !available
+                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                              : !affordable
+                                ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+                                : "hover:bg-slate-50 dark:hover:bg-slate-900"
+                          }`}
+                        >
+                          <Checkbox
+                            id={option.id}
+                            checked={choices.trainingData.includes(option.id)}
+                            disabled={!available || !affordable}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                updateChoice("trainingData", [...choices.trainingData, option.id])
+                                updateChoice("remainingBudget", choices.remainingBudget - cost)
+                              } else {
+                                updateChoice(
+                                  "trainingData",
+                                  choices.trainingData.filter((d) => d !== option.id),
+                                )
+                                updateChoice("remainingBudget", choices.remainingBudget + cost)
+                              }
+                            }}
+                            className="mt-1"
+                          />
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor={option.id} className="text-base font-medium">
+                                {option.label}
+                              </Label>
+                              {available ? (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="secondary">Not Available</Badge>
+                                  <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{option.description}</p>
+                            {!affordable && available && (
+                              <p className="text-sm text-red-600 dark:text-red-400">Insufficient budget remaining</p>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
-                </div>
+                  <EthicalInsights currentStep="data" currentChoice={choices.trainingData.join(",")} />
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
+                  <Button onClick={nextStep} disabled={!isStepComplete()}>
+                    Next: Content Filtering
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                  <RadioGroupItem value="medium" id="medium" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="medium" className="text-base font-medium">
-                      Medium Budget ($10,000 - $100,000)
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      You can afford some <GlossaryTooltip term="fine-tuning">fine-tuning</GlossaryTooltip> and
-                      customization of existing models with moderate data collection.
-                    </p>
-                  </div>
-                </div>
+            <TabsContent value="filtering">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Content Filtering Level</CardTitle>
+                  <CardDescription>
+                    How should your chatbot handle potentially harmful, offensive, or inappropriate content?
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RadioGroup
+                    value={choices.contentFiltering}
+                    onValueChange={(value) => {
+                      const cost = getCost("filtering", value)
+                      const oldCost = choices.contentFiltering ? getCost("filtering", choices.contentFiltering) : 0
+                      updateChoice("contentFiltering", value)
+                      updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
+                    }}
+                    className="space-y-4"
+                  >
+                    {[
+                      {
+                        id: "minimal",
+                        label: "Minimal Filtering",
+                        description: "Only filter illegal content. Maximum information access but higher risk.",
+                      },
+                      {
+                        id: "moderate",
+                        label: "Moderate Filtering",
+                        description: "Allow educational discussion of sensitive topics while blocking harmful content.",
+                      },
+                      {
+                        id: "strict",
+                        label: "Enterprise Filtering",
+                        description: "Comprehensive filtering with human moderators and advanced AI detection.",
+                      },
+                    ].map((option) => {
+                      const cost = getCost("filtering", option.id)
+                      const available = isAvailable("filtering", option.id)
+                      const affordable = canAfford("filtering", option.id)
+                      const budgetLevel = getBudgetLevel()
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                  <RadioGroupItem value="high" id="high" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="high" className="text-base font-medium">
-                      Large Budget (Over $100,000)
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      You can develop <GlossaryTooltip term="custom models">custom models</GlossaryTooltip>, collect
-                      extensive <GlossaryTooltip term="training data">training data</GlossaryTooltip>, and implement
-                      sophisticated features.
-                    </p>
-                  </div>
-                </div>
-              </RadioGroup>
-              <EthicalInsights currentStep="budget" currentChoice={choices.budget} />
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button onClick={nextStep} disabled={!isStepComplete()} className="">
-                Next: Training Data
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
+                      return (
+                        <div
+                          key={option.id}
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
+                            !available
+                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                              : !affordable
+                                ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+                                : "hover:bg-slate-50 dark:hover:bg-slate-900"
+                          }`}
+                        >
+                          <RadioGroupItem
+                            value={option.id}
+                            id={option.id}
+                            className="mt-1"
+                            disabled={!available || !affordable}
+                          />
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor={option.id} className="text-base font-medium">
+                                {option.label}
+                              </Label>
+                              {available ? (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <InfoTooltip category="filtering" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="secondary">Not Available</Badge>
+                                  <InfoTooltip category="filtering" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{option.description}</p>
+                            {!affordable && available && (
+                              <p className="text-sm text-red-600 dark:text-red-400">Insufficient budget remaining</p>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </RadioGroup>
+                  <EthicalInsights currentStep="filtering" currentChoice={choices.contentFiltering} />
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
+                  <Button onClick={nextStep} disabled={!isStepComplete()}>
+                    Next: Behavior
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-        <TabsContent value="data">
-          <Card className="">
-            <CardHeader>
-              <CardTitle className="">Where is your training data coming from?</CardTitle>
-              <CardDescription>
-                The source and quality of your training data will significantly impact your chatbot's knowledge and
-                biases.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RadioGroup
-                value={choices.trainingData}
-                onValueChange={(value) => updateChoice("trainingData", value)}
-                className="space-y-4 uneven-spacing"
-              >
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                  <RadioGroupItem value="public" id="public" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="public" className="text-base font-medium">
-                      Public Internet Data
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      <GlossaryTooltip term="Web scraping">Web scraping</GlossaryTooltip>, social media, forums, and
-                      other publicly available content. Cheap, broad coverage but this may include inherent societal biases and misinformation.
-                      <Source
-                        name="Common Crawl"
-                        url="https://commoncrawl.org/"
-                        description="Common Crawl maintains a free, open repository of web crawl data that can be used by anyone."
-                        date="2008-present"
-                        className="text-xs"
-                      />
-                    </p>
-                  </div>
-                </div>
+            <TabsContent value="behavior">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Chatbot Personality & Behavior</CardTitle>
+                  <CardDescription>Define how your chatbot interacts with users.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <RadioGroup
+                    value={choices.behavior}
+                    onValueChange={(value) => {
+                      const cost = getCost("behavior", value)
+                      const oldCost = choices.behavior ? getCost("behavior", choices.behavior) : 0
+                      updateChoice("behavior", value)
+                      updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
+                    }}
+                    className="space-y-4"
+                  >
+                    {[
+                      {
+                        id: "formal",
+                        label: "Formal and Professional",
+                        description: "Business-like, precise, and authoritative tone.",
+                      },
+                      {
+                        id: "friendly",
+                        label: "Friendly and Conversational",
+                        description: "Warm, approachable, and casual interaction style.",
+                      },
+                      {
+                        id: "creative",
+                        label: "Creative and Expressive",
+                        description: "Imaginative, witty, and engaging personality.",
+                      },
+                      {
+                        id: "adaptive",
+                        label: "Adaptive Behavior",
+                        description: "Learns and adapts to individual user preferences over time.",
+                      },
+                    ].map((option) => {
+                      const cost = getCost("behavior", option.id)
+                      const available = isAvailable("behavior", option.id)
+                      const affordable = canAfford("behavior", option.id)
+                      const budgetLevel = getBudgetLevel()
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="curated" id="curated" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="curated" className="text-base font-medium">
-                      Curated Sources
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Academic journals, textbooks, verified news sources, and{" "}
-                      <GlossaryTooltip term="curated sources">expert-reviewed content</GlossaryTooltip>. Higher quality
-                      but potentially limited in scope.
-                    </p>
-                  </div>
-                </div>
+                      return (
+                        <div
+                          key={option.id}
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
+                            !available
+                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                              : !affordable
+                                ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+                                : "hover:bg-slate-50 dark:hover:bg-slate-900"
+                          }`}
+                        >
+                          <RadioGroupItem
+                            value={option.id}
+                            id={option.id}
+                            className="mt-1"
+                            disabled={!available || !affordable}
+                          />
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor={option.id} className="text-base font-medium">
+                                {option.label}
+                              </Label>
+                              {available ? (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <InfoTooltip category="behavior" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="secondary">Not Available</Badge>
+                                  <InfoTooltip category="behavior" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{option.description}</p>
+                            {!affordable && available && (
+                              <p className="text-sm text-red-600 dark:text-red-400">Insufficient budget remaining</p>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </RadioGroup>
+                  <EthicalInsights currentStep="behavior" currentChoice={choices.behavior} />
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
+                  <Button onClick={nextStep} disabled={!isStepComplete()}>
+                    Next: Bias Management
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                  <RadioGroupItem value="proprietary" id="proprietary" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="proprietary" className="text-base font-medium">
-                      Proprietary Data
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Using websites like Outlier AI or Amazon Mechanical Turk to pay people to answer questions, write prompts, and other forms of human verified data. This can get expensive quickly but makes sure the data is high quality.
-                    </p>
-                  </div>
-                </div>
-              </RadioGroup>
-              <EthicalInsights currentStep="data" currentChoice={choices.trainingData} />
-              {choices.trainingData && (
-                <div className="mt-6">
-                  <TradeOffExplainer category="data" choice={choices.trainingData} />
-                </div>
-              )}
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={prevStep}>
-                Back
-              </Button>
-              <Button onClick={nextStep} disabled={!isStepComplete()} className="biased-button">
-                Next: Content Filtering
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
+            <TabsContent value="bias">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Bias Management Strategy</CardTitle>
+                  <CardDescription>How should your chatbot handle bias and fairness concerns?</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RadioGroup
+                    value={choices.biasHandling}
+                    onValueChange={(value) => {
+                      const cost = getCost("bias", value)
+                      const oldCost = choices.biasHandling ? getCost("bias", choices.biasHandling) : 0
+                      updateChoice("biasHandling", value)
+                      updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
+                    }}
+                    className="space-y-4"
+                  >
+                    {[
+                      {
+                        id: "transparent",
+                        label: "Acknowledge Transparently",
+                        description: "Openly disclose potential biases and limitations when providing information.",
+                      },
+                      {
+                        id: "values",
+                        label: "Align with Specific Values",
+                        description: "Intentionally design the chatbot to promote certain values and perspectives.",
+                      },
+                      {
+                        id: "minimize",
+                        label: "Minimize All Biases",
+                        description: "Attempt to identify and reduce all forms of bias through comprehensive testing.",
+                      },
+                    ].map((option) => {
+                      const cost = getCost("bias", option.id)
+                      const available = isAvailable("bias", option.id)
+                      const affordable = canAfford("bias", option.id)
+                      const budgetLevel = getBudgetLevel()
 
-        <TabsContent value="filtering">
-          <Card className="biased-card">
-            <CardHeader>
-              <CardTitle className="biased-title">Do you want to filter inappropriate content?</CardTitle>
-              <CardDescription>
-                How should your chatbot handle potentially harmful, offensive, or inappropriate content?
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RadioGroup
-                value={choices.contentFiltering}
-                onValueChange={(value) => updateChoice("contentFiltering", value)}
-                className="space-y-4 uneven-spacing"
-              >
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="strict" id="strict-filtering" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="strict-filtering" className="text-base font-medium">
-                      Strict Filtering
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Block all potentially offensive, harmful, or controversial content. Safest option but may limit
-                      useful information.
-                    </p>
-                  </div>
-                </div>
+                      return (
+                        <div
+                          key={option.id}
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
+                            !available
+                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                              : !affordable
+                                ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+                                : "hover:bg-slate-50 dark:hover:bg-slate-900"
+                          }`}
+                        >
+                          <RadioGroupItem
+                            value={option.id}
+                            id={option.id}
+                            className="mt-1"
+                            disabled={!available || !affordable}
+                          />
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor={option.id} className="text-base font-medium">
+                                {option.label}
+                              </Label>
+                              {available ? (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <InfoTooltip category="bias" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="secondary">Not Available</Badge>
+                                  <InfoTooltip category="bias" option={option.id} budgetLevel={budgetLevel} />
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{option.description}</p>
+                            {!affordable && available && (
+                              <p className="text-sm text-red-600 dark:text-red-400">Insufficient budget remaining</p>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </RadioGroup>
+                  <EthicalInsights currentStep="bias" currentChoice={choices.biasHandling} />
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
+                  <Button onClick={nextStep} disabled={!isStepComplete()}>
+                    See Your Chatbot
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="moderate" id="moderate-filtering" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="moderate-filtering" className="text-base font-medium">
-                      Moderate Filtering
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Allow discussion of sensitive topics in educational contexts but block harmful content. Balance
-                      between safety and utility.
-                    </p>
-                  </div>
-                </div>
+            <TabsContent value="summary">
+              <ChatbotSummary choices={choices} onReset={() => setCurrentStep(0)} />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
 
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="minimal" id="minimal-filtering" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="minimal-filtering" className="text-base font-medium">
-                      Minimal Filtering
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Only filter illegal content. Maximum information access but higher risk of harmful or offensive
-                      responses.
-                    </p>
-                  </div>
-                </div>
-              </RadioGroup>
-              <EthicalInsights currentStep="filtering" currentChoice={choices.contentFiltering} />
-              {choices.contentFiltering && (
-                <div className="mt-6">
-                  <TradeOffExplainer category="filtering" choice={choices.contentFiltering} />
-                </div>
-              )}
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={prevStep}>
-                Back
-              </Button>
-              <Button onClick={nextStep} disabled={!isStepComplete()} className="biased-button">
-                Next: Behavior
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="behavior">
-          <Card className="biased-card">
-            <CardHeader>
-              <CardTitle className="biased-title">How should the AI behave?</CardTitle>
-              <CardDescription>Define the personality and interaction style of your chatbot.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <RadioGroup
-                value={choices.behavior}
-                onValueChange={(value) => updateChoice("behavior", value)}
-                className="space-y-4 uneven-spacing"
-              >
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="formal" id="formal" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="formal" className="text-base font-medium">
-                      Formal and Professional
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Business-like, precise, and authoritative. Ideal for professional or educational contexts.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="friendly" id="friendly" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="friendly" className="text-base font-medium">
-                      Friendly and Conversational
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Warm, approachable, and casual. Good for general audience engagement.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="creative" id="creative" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="creative" className="text-base font-medium">
-                      Creative and Expressive
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Imaginative, witty, and engaging. Suitable for entertainment or creative applications.
-                    </p>
-                  </div>
-                </div>
-              </RadioGroup>
-
-              <div className="flex items-start space-x-3 p-4 border rounded-lg">
-                <Checkbox
-                  id="adapt"
-                  checked={!!choices.adaptToUser}
-                  onCheckedChange={(checked) => updateChoice("adaptToUser", !!checked)}
-                />
-                <div className="space-y-2">
-                  <Label htmlFor="adapt" className="text-base font-medium">
-                    Should it adapt to the user?
-                  </Label>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Allow the chatbot to learn from interactions and adjust its responses based on user preferences and
-                    behavior. This can improve <GlossaryTooltip term="personalization">personalization</GlossaryTooltip>{" "}
-                    but raises privacy concerns and may create{" "}
-                    <GlossaryTooltip term="filter bubbles">filter bubbles</GlossaryTooltip>.
-                  </p>
-                </div>
-              </div>
-              <EthicalInsights
-                currentStep="behavior"
-                currentChoice={choices.behavior}
-                adaptToUser={choices.adaptToUser}
-              />
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={prevStep}>
-                Back
-              </Button>
-              <Button onClick={nextStep} disabled={!isStepComplete()} className="biased-button">
-                Next: Bias Handling
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="bias">
-          <Card className="biased-card">
-            <CardHeader>
-              <CardTitle className="biased-title">How do you want to handle bias?</CardTitle>
-              <CardDescription>
-                All AI systems contain <GlossaryTooltip term="bias">biases</GlossaryTooltip>. How should your chatbot
-                approach this challenge?
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RadioGroup
-                value={choices.biasHandling}
-                onValueChange={(value) => updateChoice("biasHandling", value)}
-                className="space-y-4 uneven-spacing"
-              >
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="minimize" id="minimize" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="minimize" className="text-base font-medium">
-                      Minimize All Biases
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Attempt to identify and reduce all forms of bias in responses. Aims for neutrality but may result
-                      in overly cautious answers.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="values" id="values" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="values" className="text-base font-medium">
-                      Align with Specific Values
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Intentionally design the chatbot to promote certain values (e.g., scientific consensus, human
-                      rights). More opinionated but clearer{" "}
-                      <GlossaryTooltip term="ethical AI">ethical stance</GlossaryTooltip>.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors biased-option">
-                  <RadioGroupItem value="transparent" id="transparent" className="mt-1" />
-                  <div className="space-y-2">
-                    <Label htmlFor="transparent" className="text-base font-medium">
-                      Acknowledge Biases Transparently
-                    </Label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Openly disclose potential biases and limitations when providing information. Educational but may
-                      undermine confidence.
-                    </p>
-                  </div>
-                </div>
-              </RadioGroup>
-              <EthicalInsights currentStep="bias" currentChoice={choices.biasHandling} />
-              {choices.biasHandling && (
-                <div className="mt-6">
-                  <TradeOffExplainer category="bias" choice={choices.biasHandling} />
-                </div>
-              )}
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={prevStep}>
-                Back
-              </Button>
-              <Button onClick={nextStep} disabled={!isStepComplete()} className="biased-button">
-                See Your Chatbot Summary
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="summary">
-          <ChatbotSummary choices={choices} onReset={() => setCurrentStep(0)} />
-        </TabsContent>
-      </Tabs>
+      {/* Right Sidebar - Chatbot Animation */}
+      <div className="lg:col-span-3">
+        <div className="sticky top-8">
+          <ChatbotAnimation currentStep={currentStep} choices={choices} />
+        </div>
+      </div>
     </div>
   )
 }
