@@ -320,7 +320,7 @@ export function ChatbotBuilder() {
                 <CardContent>
                   <RadioGroup
                     value={choices.budget}
-                    onValueChange={(value) => {
+                    onValueChange={(value: 'small' | 'medium' | 'large') => {
                       const amounts = { small: 50000, medium: 500000, large: 5000000 }
                       const amount = amounts[value]
                       updateChoice("budget", value)
@@ -486,7 +486,7 @@ export function ChatbotBuilder() {
                 <CardContent>
                   <RadioGroup
                     value={choices.contentFiltering}
-                    onValueChange={(value) => {
+                    onValueChange={(value: 'small' | 'medium' | 'large') => {
                       const cost = getCost("filtering", value)
                       const oldCost = choices.contentFiltering ? getCost("filtering", choices.contentFiltering) : 0
                       updateChoice("contentFiltering", value)
@@ -581,7 +581,7 @@ export function ChatbotBuilder() {
                 <CardContent className="space-y-6">
                   <RadioGroup
                     value={choices.behavior}
-                    onValueChange={(value) => {
+                    onValueChange={(value: 'small' | 'medium' | 'large') => {
                       const cost = getCost("behavior", value)
                       const oldCost = choices.behavior ? getCost("behavior", choices.behavior) : 0
                       updateChoice("behavior", value)
@@ -681,7 +681,7 @@ export function ChatbotBuilder() {
                 <CardContent>
                   <RadioGroup
                     value={choices.biasHandling}
-                    onValueChange={(value) => {
+                    onValueChange={(value: 'small' | 'medium' | 'large') => {
                       const cost = getCost("bias", value)
                       const oldCost = choices.biasHandling ? getCost("bias", choices.biasHandling) : 0
                       updateChoice("biasHandling", value)
