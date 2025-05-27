@@ -423,16 +423,15 @@ export function ChatbotBuilder() {
                             checked={choices.trainingData.includes(option.id)}
                             disabled={!available || !affordable}
                             onCheckedChange={(checked) => {
-                              if (checked) {
-                                updateChoice("trainingData", [...choices.trainingData, option.id])
-                                updateChoice("remainingBudget", choices.remainingBudget - cost)
-                              } else {
-                                updateChoice(
-                                  "trainingData",
-                                  choices.trainingData.filter((d) => d !== option.id),
-                                )
-                                updateChoice("remainingBudget", choices.remainingBudget + cost)
-                              }
+                            if (checked) {
+                              if (cost === null) return // or throw error
+                              updateChoice("trainingData", [...choices.trainingData, option.id])
+                              updateChoice("remainingBudget", choices.remainingBudget - cost)
+                            } else {
+                              if (cost === null) return
+                              updateChoice("trainingData", choices.trainingData.filter((d) => d !== option.id))
+                              updateChoice("remainingBudget", choices.remainingBudget + cost)
+                            }
                             }}
                             className="mt-1"
                           />
