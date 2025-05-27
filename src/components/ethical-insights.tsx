@@ -125,6 +125,55 @@ const insights: Record<string, EthicalInsight[]> = {
         "Several AI chatbots have generated instructions for illegal activities or harmful content when filtering was insufficient.",
     },
   ],
+  "behavior-directive": [
+    {
+      title: "Authority and Trust Dynamics",
+      description:
+"When AI communicates with excessive confidence, it may discourage users from questioning its responses, leading to blind trust. This 'oracle effect' is especially risky in situations involving important or sensitive decisions.",      category: "technical",
+          },
+    {
+      title: "The Illusion of Certainty",
+      description:
+        "AI systems have inherent uncertainties, but directive communication styles can mask these limitations. Users may not realize when the AI is extrapolating beyond its training data or making educated guesses.",
+      category: "technical",
+      realWorldExample:
+        "Financial AI advisors that provided confident investment advice without clearly communicating market uncertainties, leading to unrealistic user expectations.",
+      learnMoreLink: "https://mindmatters.ai/2025/04/llms-still-cannot-be-trusted-for-financial-advice/"
+    },
+  ],
+  "behavior-empathetic": [
+    {
+      title: "Emotional Manipulation Through Design",
+      description:
+        "When AI systems simulate empathy and emotional understanding, they can manipulate users' emotions even if unintentionally. This is particularly concerning with vulnerable populations like elderly users or people in emotional distress.",
+      category: "technical",
+      realWorldExample:
+        "Mental health chatbots like Woebot have faced criticism for creating emotional dependencies in users who began treating the AI as a real friend or therapist.",
+      learnMoreLink: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10944174/",
+    },
+    {
+      title: "Truth vs Comfort Dilemma",
+      description:
+        "Empathetic AI may prioritize user comfort over factual accuracy, avoiding difficult truths that might upset users. This can prevent users from accessing important but uncomfortable information.",
+      category: "technical",
+      realWorldExample:
+        "Health-focused chatbots that avoid discussing serious symptoms to prevent causing anxiety, potentially delaying necessary medical care.",
+    },
+  ],
+  "behavior-transparent": [
+    {
+      title: "Undermining Utility Through Over-Transparency",
+      description:
+        "Constantly emphasizing limitations can make AI less useful and trustworthy, even when its information is accurate. Users may lose confidence in genuinely helpful guidance.",
+      category: "technical",
+      },
+    {
+      title: "Transparency Fatigue",
+      description:
+        "Users may become desensitized to repeated warnings about AI limitations, similar to how people ignore cookie consent notices. This can defeat the purpose of transparency.",
+      category: "technical",
+    },
+  ],
   "bias-minimize": [
     {
       title: "False Neutrality",
@@ -175,18 +224,21 @@ const insights: Record<string, EthicalInsight[]> = {
   ],
   "adaptToUser-true": [
     {
-      title: "Filter Bubbles",
+      title: "The Mirror Effect and Filter Bubbles",
       description:
-        "Personalization can create echo chambers that reinforce existing beliefs and limit exposure to diverse perspectives.",
+        "When AI adapts to user communication styles, it may reinforce existing biases and create intellectual echo chambers. Users may receive increasingly narrow perspectives that match their existing beliefs.",
       category: "technical",
       realWorldExample:
-        "Recommendation systems on social media have been criticized for creating filter bubbles that polarize users.",
+        "Social media algorithms that adapt to user preferences have been linked to political polarization by showing users increasingly extreme content that matches their initial leanings.",
     },
     {
-      title: "Privacy Concerns",
+      title: "Privacy Through Behavioral Analysis",
       description:
-        "Adapting to users requires collecting and storing user data, raising privacy concerns and potential regulatory compliance issues.",
+        "Adaptive AI requires deep analysis of user behavior, communication patterns, and preferences. This creates detailed psychological profiles that raise significant privacy and data protection concerns.",
       category: "technical",
+      realWorldExample:
+        "Cambridge Analytica demonstrated how communication pattern analysis could reveal intimate details about users' personalities and political preferences.",
+      learnMoreLink: "https://www.theatlantic.com/technology/archive/2018/03/the-cambridge-analytica-scandal-in-three-paragraphs/556046/",
     },
   ],
 }

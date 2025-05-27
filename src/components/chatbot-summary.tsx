@@ -163,12 +163,13 @@ export function ChatbotSummary({
                 </p>
               </div>
 
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2">Personality</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {choices.behavior || "No behavior selected"}
-                </p>
-              </div>
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-medium mb-2">Personality</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {getBehaviorDescription(choices.behavior)}
+                    {choices.adaptToUser && " Adapts to user preferences and behavior over time."}
+                  </p>
+                </div>
 
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Bias Management</h4>
@@ -291,6 +292,419 @@ export function ChatbotSummary({
       </CardFooter>
     </Card>
   )
+}
+
+// Helper functions
+
+function getBudgetLabel(budget: string): string {
+  switch (budget) {
+    case "low":
+      return "Limited Budget"
+    case "medium":
+      return "Medium Budget"
+    case "high":
+      return "Large Budget"
+    default:
+      return "Undefined Budget"
+  }
+}
+
+function getDataLabel(data: string): string {
+  switch (data) {
+    case "public":
+      return "Public Data"
+    case "curated":
+      return "Curated Data"
+    case "proprietary":
+      return "Proprietary Data"
+    default:
+      return "Undefined Data"
+  }
+}
+
+function getBudgetDescription(budget: string): string {
+  switch (budget) {
+    case "low":
+      return "With a limited budget, your chatbot will rely on pre-trained models with minimal customization. You'll need to leverage open-source solutions and focus on a narrow use case to be effective."
+    case "medium":
+      return "Your medium budget allows for some model fine-tuning and customization. You can collect moderate amounts of training data and implement more sophisticated features than off-the-shelf solutions."
+    case "high":
+      return "With a large budget, you can develop custom models, collect extensive training data, and implement advanced features like multimodal capabilities, sophisticated context handling, and extensive testing."
+    default:
+      return ""
+  }
+}
+
+function getDataDescription(data: string): string {
+  switch (data) {
+    case "public":
+      return "Your chatbot will draw knowledge from a wide range of public internet sources, giving it broad coverage but potentially including biases, misinformation, and varying quality content."
+    case "curated":
+      return "Your chatbot will be trained on carefully selected, high-quality sources like academic journals, textbooks, and verified information. This provides more reliable information but may have limited coverage of certain topics or cultural contexts."
+    case "proprietary":
+      return "Your chatbot will leverage your organization's internal data, making it highly specialized for your domain but potentially limited in general knowledge. This approach offers unique value but requires careful data governance."
+    default:
+      return ""
+  }
+}
+
+function getFilteringDescription(filtering: string): string {
+  switch (filtering) {
+    case "strict":
+      return "Your chatbot will avoid all potentially offensive, harmful, or controversial content. This creates a safe environment but may limit the chatbot's utility for certain topics and discussions."
+    case "moderate":
+      return "Your chatbot will allow educational discussion of sensitive topics while blocking harmful content. This balances safety with utility but requires more sophisticated content moderation systems."
+    case "minimal":
+      return "Your chatbot will only filter illegal content, maximizing information access but increasing the risk of generating harmful or offensive responses. This approach requires robust user guidelines and oversight."
+    default:
+      return ""
+  }
+}
+
+function getBehaviorDescription(behavior: string): string {
+  switch (behavior) {
+    case "formal":
+      return "Your chatbot will maintain a professional, precise, and authoritative tone. It will prioritize accuracy and clarity over conversational engagement."
+    case "friendly":
+      return "Your chatbot will be warm, approachable, and conversational. It will use casual language and focus on building rapport with users."
+    case "creative":
+      return "Your chatbot will be imaginative, witty, and expressive. It will use colorful language and may incorporate humor and storytelling into its responses."
+    default:
+      return ""
+  }
+}
+
+function getBiasDescription(bias: string): string {
+  switch (bias) {
+    case "minimize":
+      return "Your chatbot will attempt to identify and reduce all forms of bias in its responses, aiming for neutrality. This may result in more cautious, less opinionated answers."
+    case "values":
+      return "Your chatbot will be intentionally designed to promote specific values and perspectives. This creates a clearer ethical stance but may not represent all viewpoints equally."
+    case "transparent":
+      return "Your chatbot will openly acknowledge potential biases and limitations when providing information. This educational approach helps users understand the context but may reduce perceived authority."
+    default:
+      return ""
+  }
+}
+
+function getStrengths(choices: ChatbotChoices): string[] {
+  const strengths: string[] = []
+
+  // Budget-based strengths
+  if (choices.budget === "high") {
+    strengths.push("Ability to develop custom models tailored to specific needs")
+    strengths.push("Resources for extensive testing and refinement")
+  }
+
+  // Data-based strengths
+  if (choices.trainingData === "public") {
+    strengths.push("Broad knowledge across many domains and topics")
+    strengths.push("Familiarity with contemporary language and cultural references")
+  } else if (choices.trainingData === "curated") {
+    strengths.push("High-quality, reliable information from verified sources")
+    strengths.push("Reduced risk of spreading misinformation")
+  } else if (choices.trainingData === "proprietary") {
+    strengths.push("Specialized knowledge in your organization's domain")
+    strengths.push("Ability to reference internal information not available to competitors")
+  }
+
+  // Filtering-based strengths
+  if (choices.contentFiltering === "strict") {
+    strengths.push("Safe for all audiences including children")
+    strengths.push("Minimal risk of generating harmful content")
+  } else if (choices.contentFiltering === "moderate") {
+    strengths.push("Balance between safety and educational value")
+    strengths.push("Ability to discuss sensitive topics in appropriate contexts")
+  }
+
+  // Behavior-based strengths
+  if (choices.behavior === "formal") {
+    strengths.push("Professional appearance suitable for business contexts")
+    strengths.push("Clear, precise communication style")
+  } else if (choices.behavior === "friendly") {
+    strengths.push("Approachable personality that builds user rapport")
+    strengths.push("Conversational style that feels natural to users")
+  } else if (choices.behavior === "creative") {
+    strengths.push("Engaging, memorable interactions")
+    strengths.push("Ability to generate creative content and ideas")
+  }
+
+  // Adaptation-based strengths
+  if (choices.adaptToUser) {
+    strengths.push("Personalized experience that improves over time")
+    strengths.push("Ability to remember user preferences and history")
+  }
+
+  // Bias-based strengths
+  if (choices.biasHandling === "transparent") {
+    strengths.push("Educational approach that helps users understand AI limitations")
+    strengths.push("Builds trust through honesty about capabilities")
+  }
+
+  return strengths
+}
+
+function getLimitations(choices: ChatbotChoices): string[] {
+  const limitations: string[] = []
+
+  // Budget-based limitations
+  if (choices.budget === "low") {
+    limitations.push("Limited customization and capabilities")
+    limitations.push("Reliance on generic pre-trained models")
+  } else if (choices.budget === "medium") {
+    limitations.push("Some trade-offs between features due to resource constraints")
+  }
+
+  // Data-based limitations
+  if (choices.trainingData === "public") {
+    limitations.push("May contain biases, misinformation, or low-quality content")
+    limitations.push("Less reliable for specialized or technical information")
+  } else if (choices.trainingData === "curated") {
+    limitations.push("May have gaps in coverage of emerging topics or niche subjects")
+    limitations.push("Potentially limited understanding of colloquial language or cultural nuances")
+  } else if (choices.trainingData === "proprietary") {
+    limitations.push("Limited general knowledge outside your organization's domain")
+    limitations.push("May struggle with common questions unrelated to your specific field")
+  }
+
+  // Filtering-based limitations
+  if (choices.contentFiltering === "strict") {
+    limitations.push("May refuse to discuss important but sensitive topics")
+    limitations.push("Could be overly cautious, limiting utility")
+  } else if (choices.contentFiltering === "minimal") {
+    limitations.push("Higher risk of generating inappropriate or offensive content")
+    limitations.push("May require more oversight and moderation")
+  }
+
+  // Behavior-based limitations
+  if (choices.behavior === "formal") {
+    limitations.push("May appear stiff or impersonal to some users")
+    limitations.push("Less engaging for casual conversation")
+  } else if (choices.behavior === "creative") {
+    limitations.push("May prioritize engagement over accuracy in some cases")
+    limitations.push("Style might not be appropriate for all professional contexts")
+  }
+
+  // Adaptation-based limitations
+  if (choices.adaptToUser) {
+    limitations.push("Raises privacy concerns about data collection and storage")
+    limitations.push("Risk of creating filter bubbles that reinforce existing beliefs")
+  } else {
+    limitations.push("Less personalized experience for returning users")
+  }
+
+  // Bias-based limitations
+  if (choices.biasHandling === "minimize") {
+    limitations.push("May provide overly cautious or non-committal answers")
+    limitations.push("Could avoid taking clear positions even when appropriate")
+  } else if (choices.biasHandling === "values") {
+    limitations.push("May not represent all viewpoints equally")
+    limitations.push("Could alienate users with different value systems")
+  }
+
+  return limitations
+}
+
+function getEthicalRisks(choices: ChatbotChoices): { title: string; description: string }[] {
+  const risks: { title: string; description: string }[] = []
+
+  // Common risks for all chatbots
+  risks.push({
+    title: "Misinformation",
+    description:
+      "All AI systems can generate incorrect information or 'hallucinate' facts. This risk is higher with public data sources and lower with curated content.",
+  })
+
+  // Data-specific risks
+  if (choices.trainingData === "public") {
+    risks.push({
+      title: "Bias Amplification",
+      description:
+        "Public internet data contains societal biases that your chatbot may learn and amplify, potentially reinforcing stereotypes or discrimination.",
+    })
+  } else if (choices.trainingData === "proprietary") {
+    risks.push({
+      title: "Data Privacy",
+      description:
+        "Using internal data raises concerns about employee and customer privacy, requiring careful data governance and anonymization.",
+    })
+  }
+
+  // Filtering-specific risks
+  if (choices.contentFiltering === "minimal") {
+    risks.push({
+      title: "Harmful Content Generation",
+      description:
+        "With minimal filtering, your chatbot may generate content that could be offensive, misleading, or potentially harmful to vulnerable users.",
+    })
+  } else if (choices.contentFiltering === "strict") {
+    risks.push({
+      title: "Censorship Concerns",
+      description:
+        "Overly strict filtering may prevent discussion of important topics like health, politics, or social issues, raising concerns about censorship.",
+    })
+  }
+
+  // Adaptation-specific risks
+  if (choices.adaptToUser) {
+    risks.push({
+      title: "Filter Bubbles",
+      description:
+        "Adapting to users can create echo chambers that reinforce existing beliefs and limit exposure to diverse perspectives.",
+    })
+    risks.push({
+      title: "Privacy Concerns",
+      description:
+        "Personalization requires collecting and storing user data, raising privacy concerns and potential regulatory compliance issues.",
+    })
+  }
+
+  // Bias-specific risks
+  if (choices.biasHandling === "values") {
+    risks.push({
+      title: "Value Imposition",
+      description:
+        "Aligning with specific values may impose particular worldviews on users who don't share those perspectives, raising ethical questions about AI influence.",
+    })
+  }
+
+  // Budget-specific risks
+  if (choices.budget === "low") {
+    risks.push({
+      title: "Limited Safety Measures",
+      description:
+        "A limited budget may constrain your ability to implement robust safety measures, increasing various risks.",
+    })
+  }
+
+  return risks
+}
+
+function getMitigationStrategies(choices: ChatbotChoices): string[] {
+  const strategies: string[] = []
+
+  // Common strategies for all chatbots
+  strategies.push("Implement clear disclaimers about the chatbot's limitations and potential errors")
+  strategies.push("Establish a feedback mechanism for users to report problematic responses")
+
+  // Data-specific strategies
+  if (choices.trainingData === "public") {
+    strategies.push("Use bias detection tools to identify and mitigate biases in training data")
+    strategies.push("Supplement public data with curated sources for sensitive topics")
+  } else if (choices.trainingData === "proprietary") {
+    strategies.push("Implement robust data governance and anonymization procedures")
+    strategies.push("Conduct regular privacy impact assessments")
+  }
+
+  // Filtering-specific strategies
+  if (choices.contentFiltering === "minimal") {
+    strategies.push("Implement user controls to adjust content filtering levels")
+    strategies.push("Establish clear usage guidelines and terms of service")
+  }
+
+  // Adaptation-specific strategies
+  if (choices.adaptToUser) {
+    strategies.push("Provide transparency about what data is collected and how it's used")
+    strategies.push("Allow users to view and delete their data")
+    strategies.push("Implement features to expose users to diverse perspectives")
+  }
+
+  // Bias-specific strategies
+  if (choices.biasHandling === "values") {
+    strategies.push("Clearly disclose the values and perspectives the chatbot is designed to promote")
+    strategies.push("Consider providing alternative viewpoints when appropriate")
+  } else if (choices.biasHandling === "transparent") {
+    strategies.push("Develop clear language for acknowledging limitations without undermining user confidence")
+  }
+
+  // Budget-specific strategies
+  if (choices.budget === "low") {
+    strategies.push("Focus on a narrow use case where risks can be more effectively managed")
+    strategies.push("Leverage open-source safety tools and best practices")
+  }
+
+  return strategies
+}
+
+function getRealWorldExamples(choices: ChatbotChoices): { name: string; description: string; similarities: string }[] {
+  const examples: { name: string; description: string; similarities: string }[] = []
+
+  // Examples based on budget and data
+  if (choices.budget === "high" && choices.trainingData === "public") {
+    examples.push({
+      name: "ChatGPT",
+      description: "OpenAI's conversational AI trained on diverse internet data with various safety measures.",
+      similarities: "Broad knowledge base, significant development resources, and extensive capabilities.",
+    })
+  } else if (
+    choices.budget === "medium" &&
+    (choices.trainingData === "curated" || choices.trainingData === "proprietary")
+  ) {
+    examples.push({
+      name: "Industry-Specific Assistants",
+      description:
+        "Specialized chatbots like legal assistants (e.g., Harvey AI) or healthcare chatbots that focus on specific domains.",
+      similarities: "Domain-specific knowledge, moderate customization, and professional focus.",
+    })
+  } else if (choices.budget === "low") {
+    examples.push({
+      name: "Small Business Chatbots",
+      description: "Simple customer service chatbots that handle basic inquiries using pre-built platforms.",
+      similarities: "Limited scope, reliance on existing platforms, and focused use cases.",
+    })
+  }
+
+  // Examples based on behavior and filtering
+  if (choices.behavior === "formal" && choices.contentFiltering === "strict") {
+    examples.push({
+      name: "Educational Assistants",
+      description:
+        "AI tutors and educational tools like Khan Academy's Khanmigo that maintain professional tone and strict content standards.",
+      similarities: "Professional demeanor, educational focus, and strong safety measures.",
+    })
+  } else if (choices.behavior === "friendly" && choices.contentFiltering === "moderate") {
+    examples.push({
+      name: "Customer Service Chatbots",
+      description:
+        "Conversational assistants like those used by major retailers that balance helpfulness with appropriate boundaries.",
+      similarities: "Conversational tone, customer-focused approach, and balanced content policies.",
+    })
+  } else if (choices.behavior === "creative" && choices.contentFiltering !== "strict") {
+    examples.push({
+      name: "Creative Writing Assistants",
+      description:
+        "Tools like Character.AI or creative modes in general AI assistants that focus on storytelling and creative content.",
+      similarities: "Emphasis on creativity, expressive language, and imaginative capabilities.",
+    })
+  }
+
+  // Examples based on adaptation and bias handling
+  if (choices.adaptToUser && choices.biasHandling === "values") {
+    examples.push({
+      name: "Specialized Coaching Apps",
+      description:
+        "Mental health apps like Woebot or fitness coaches that adapt to users while promoting specific health values.",
+      similarities: "Personalization features, alignment with health/wellness values, and adaptive learning.",
+    })
+  } else if (!choices.adaptToUser && choices.biasHandling === "transparent") {
+    examples.push({
+      name: "Research Assistants",
+      description: "Academic or research-focused AI tools that prioritize transparency about limitations and sources.",
+      similarities: "Emphasis on accuracy, transparent about limitations, and educational approach.",
+    })
+  }
+
+  // If we don't have enough examples yet, add a generic one
+  if (examples.length < 2) {
+    examples.push({
+      name: "General Purpose Assistants",
+      description:
+        "Multi-purpose AI assistants like Siri, Google Assistant, or Alexa that handle a wide range of tasks.",
+      similarities: "Broad functionality, consumer focus, and balance between various design considerations.",
+    })
+  }
+
+  return examples
 }
 
 function generateSummaryText(choices: ChatbotChoices): string {

@@ -121,13 +121,6 @@ const explanations = {
   },
 }
 
-explanations.budget = {
-  small: "Good for limited experiments and testing minimal functionality.",
-  medium: "Allows decent quality features and data options for a production-ready chatbot.",
-  large: "Enterprise-grade budget for state-of-the-art models, data, and tuning."
-}
-
-
 const unavailableReasons = {
   data: {
     curated: {
@@ -248,11 +241,40 @@ export function ChatbotBuilder() {
     category,
     option,
     budgetLevel,
-  }: { category: string; option: string; budgetLevel: string }) => {
-    const explanation = explanations[category]?.[option]?.[budgetLevel]
-    const unavailableReason = unavailableReasons[category]?.[option]?.[budgetLevel]
+  }: {
+    category: string
+    option: string
+    budgetLevel: string
+  }) => {
+    // Try to get explanation for specific budget level first, then fallback to any available explanation
+    let explanation = null
+    let unavailableReason = null
 
-    if (!explanation && !unavailableReason) return null
+    // Check if we have explanations for this category and option
+    if (explanations[category] && explanations[category][option]) {
+      // Try to get budget-level specific explanation
+      if (explanations[category][option][budgetLevel]) {
+        explanation = explanations[category][option][budgetLevel]
+      } else {
+        // Get the first available explanation for this option
+        const availableExplanations = explanations[category][option]
+        const firstKey = Object.keys(availableExplanations)[0]
+        if (firstKey) {
+          explanation = availableExplanations[firstKey]
+        }
+      }
+    }
+
+    // Check for unavailable reasons
+    if (unavailableReasons[category] && unavailableReasons[category][option]) {
+      if (unavailableReasons[category][option][budgetLevel]) {
+        unavailableReason = unavailableReasons[category][option][budgetLevel]
+      }
+    }
+
+    const content = explanation || unavailableReason
+
+    if (!content) return null
 
     return (
       <TooltipProvider>
@@ -261,7 +283,7 @@ export function ChatbotBuilder() {
             <Info className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-help" />
           </TooltipTrigger>
           <TooltipContent className="max-w-xs p-3">
-            <p className="text-sm">{explanation || unavailableReason}</p>
+            <p className="text-sm">{content}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
