@@ -31,7 +31,7 @@ type ChatbotChoices = {
 }
 
 // Cost data structure based on the provided table
-const costs = {
+const costs: Record<string, Record<string, Record<string, number | null>>> ={
   data: {
     public: { small: 3000, medium: 30000, large: 100000 },
     curated: { small: null, medium: 55000, large: 1200000 },
@@ -55,7 +55,7 @@ const costs = {
   },
 }
 
-const explanations = {
+const explanations: Record<string, Record<string, Record<string, string>>> = {
   data: {
     public: {
       small: "Covers cloud compute (AWS, GCP) and developer time to process a small Common Crawl subset.",
@@ -121,7 +121,7 @@ const explanations = {
   },
 }
 
-const unavailableReasons = {
+const unavailableReasons: Record<string, Record<string, Record<string, string>>> = {
   data: {
     curated: {
       small: "Premium data sources require minimum licensing fees that exceed small budgets.",
