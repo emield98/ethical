@@ -440,12 +440,14 @@ export function ChatbotBuilder() {
                               <Label htmlFor={option.id} className="text-base font-medium">
                                 {option.label}
                               </Label>
-                              {available && cost !== null && (
+                              {available && cost !== null ? (
                                 <div className="flex items-center gap-1">
-                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost ?? 0)}</Badge>
+                                  <Badge variant={affordable ? "default" : "destructive"}>
+                                    {formatCurrency(cost ?? 0)}
+                                  </Badge>
                                   <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
                                 </div>
-                              )} : {(
+                              ) : (
                                 <div className="flex items-center gap-1">
                                   <Badge variant="secondary">Not Available</Badge>
                                   <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
