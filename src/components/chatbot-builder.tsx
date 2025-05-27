@@ -440,12 +440,12 @@ export function ChatbotBuilder() {
                               <Label htmlFor={option.id} className="text-base font-medium">
                                 {option.label}
                               </Label>
-                              {available ? (
+                              {available && cost !== null && (
                                 <div className="flex items-center gap-1">
-                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost ?? 0)}</Badge>
                                   <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
                                 </div>
-                              ) : (
+                              )} : {(
                                 <div className="flex items-center gap-1">
                                   <Badge variant="secondary">Not Available</Badge>
                                   <InfoTooltip category="data" option={option.id} budgetLevel={budgetLevel} />
@@ -485,9 +485,10 @@ export function ChatbotBuilder() {
                 <CardContent>
                   <RadioGroup
                     value={choices.contentFiltering}
-                    onValueChange={(value: 'small' | 'medium' | 'large') => {
+                    onValueChange={(value: 'minimal' | 'moderate' | 'strict') => {
                       const cost = getCost("filtering", value)
                       const oldCost = choices.contentFiltering ? getCost("filtering", choices.contentFiltering) : 0
+                      if (cost === null || oldCost === null) return
                       updateChoice("contentFiltering", value)
                       updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
                     }}
@@ -539,7 +540,7 @@ export function ChatbotBuilder() {
                               </Label>
                               {available ? (
                                 <div className="flex items-center gap-1">
-                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost ?? 0)}</Badge>
                                   <InfoTooltip category="filtering" option={option.id} budgetLevel={budgetLevel} />
                                 </div>
                               ) : (
@@ -583,6 +584,7 @@ export function ChatbotBuilder() {
                     onValueChange={(value: 'small' | 'medium' | 'large') => {
                       const cost = getCost("behavior", value)
                       const oldCost = choices.behavior ? getCost("behavior", choices.behavior) : 0
+                      if (cost === null || oldCost === null) return
                       updateChoice("behavior", value)
                       updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
                     }}
@@ -639,7 +641,7 @@ export function ChatbotBuilder() {
                               </Label>
                               {available ? (
                                 <div className="flex items-center gap-1">
-                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost ?? 0)}</Badge>
                                   <InfoTooltip category="behavior" option={option.id} budgetLevel={budgetLevel} />
                                 </div>
                               ) : (
@@ -683,6 +685,7 @@ export function ChatbotBuilder() {
                     onValueChange={(value: 'small' | 'medium' | 'large') => {
                       const cost = getCost("bias", value)
                       const oldCost = choices.biasHandling ? getCost("bias", choices.biasHandling) : 0
+                      if (cost === null || oldCost === null) return
                       updateChoice("biasHandling", value)
                       updateChoice("remainingBudget", choices.remainingBudget + oldCost - cost)
                     }}
@@ -734,7 +737,7 @@ export function ChatbotBuilder() {
                               </Label>
                               {available ? (
                                 <div className="flex items-center gap-1">
-                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost)}</Badge>
+                                  <Badge variant={affordable ? "default" : "destructive"}>{formatCurrency(cost ?? 0)}</Badge>
                                   <InfoTooltip category="bias" option={option.id} budgetLevel={budgetLevel} />
                                 </div>
                               ) : (
