@@ -28,6 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { GlossaryTooltip } from "./ui-tooltip"
 
 const steps = ["budget", "data", "filtering", "behavior", "bias", "summary"];
 const stepTitles = [
@@ -464,8 +465,11 @@ export function ChatbotBuilder() {
                       {
                         id: "public",
                         label: "Public Internet Data",
-                        description:
-                          "Web scraping, social media, forums, and other publicly available content",
+                        description: (
+                          <>
+                            <GlossaryTooltip term="Web scraping">Web scraping</GlossaryTooltip>, social media, forums, and other publicly available content
+                          </>
+                        ),
                       },
                       {
                         id: "curated",
