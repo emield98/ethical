@@ -81,63 +81,63 @@ const costs: Record<string, Record<string, Record<string, number | null>>> = {
 const explanations: Record<string, Record<string, Record<string, string>>> = {
   data: {
     public: {
-      small: "Basic access to open datasets like Common Crawl and Wikipedia, processed via standard scripts.",
-      medium: "Includes broader data cleaning and formatting, with limited multilingual support.",
-      large: "Supports large-scale ingestion pipelines and multilingual normalization across regions.",
+      small: "Gives you basic training data from public sources like Wikipedia and blogs. Good for general knowledge, but quality varies.",
+      medium: "Adds better structure and multilingual support using cleaned public data. More reliable for global audiences.",
+      large: "Advanced processing of massive public datasets from across the web, with expert filtering and formatting.",
     },
     curated: {
-      medium: "Access to structured APIs like NewsAPI or academic datasets under license.",
-      large: "Major licensed collections (e.g., legal/corporate documents) for enterprise models.",
+      medium: "Includes licensed access to trusted sources like academic journals or verified news. Improves fact accuracy.",
+      large: "Full library access to professional content like legal texts, textbooks, or financial reports — perfect for experts.",
     },
     proprietary: {
-      small: "Outsourced dataset creation via freelancers (e.g., prompt-response sets).",
-      medium: "Includes labeling software and internal review teams for data tuning.",
-      large: "Full-scale proprietary corpora + RLHF pipeline with continuous feedback.",
+      small: "Small custom dataset built with freelancer help. Useful for focused use cases like a niche support bot.",
+      medium: "Moderate-scale dataset with human-checked examples. Good for company-specific or regulated environments.",
+      large: "Top-tier data built by large teams with quality control and review. Needed for enterprise or high-stakes use.",
     },
   },
   filtering: {
     minimal: {
-      small: "Simple toxicity filters using open-source APIs and basic thresholds.",
-      medium: "Moderate use of commercial APIs with dynamic rule evaluation.",
-      large: "Fallback filters in enterprise pipeline with alerting and auto-updates.",
+      small: "Basic filters that block illegal or clearly harmful content. Fast, but not very safe for all users.",
+      medium: "Adds smarter filters using commercial tools. Good balance between safety and flexibility.",
+      large: "Robust fallback filters used by big tech companies. Includes alerts and tracking for risky content.",
     },
     moderate: {
-      medium: "Includes light human-in-the-loop moderation combined with ML classifiers.",
-      large: "Custom ML classifiers with part-time moderators in key markets.",
+      medium: "AI filters with human spot-checking. Better for communities or youth apps.",
+      large: "Custom filters trained on your topics with part-time moderators, good for semi-sensitive content.",
     },
     strict: {
-      large: "Custom dashboards, labeling infrastructure, and 10+ moderators in different time zones.",
+      large: "Enterprise-level filtering: custom dashboards, trained moderators across time zones, and full audit logs.",
     },
   },
   behavior: {
     directive: {
-      small: "Prompt templates with formal authoritative phrasing, no fine-tuning.",
-      medium: "Fine-tuned behavior on factuality datasets with testing loops.",
-      large: "Real-time corrections, validation layers, and continuous improvement processes.",
+      small: "Uses prompts to sound confident and helpful, like a virtual librarian. No deep AI training needed.",
+      medium: "Fine-tuned to be more accurate and direct. Great for Q&A or tech support bots.",
+      large: "Includes advanced logic for detecting mistakes and correcting them on the fly. Ideal for medical or legal tools.",
     },
     empathetic: {
-      small: "Emotion-aware prompt phrasing with basic tone awareness.",
-      medium: "Fine-tuned on emotional datasets + feedback from test users.",
-      large: "Includes multi-language empathy tuning and scenario-based training.",
+      small: "Basic tone adjustment to sound friendly and caring. Helpful for casual or wellness-focused bots.",
+      medium: "Trained on emotional language and tested with real users to feel more human.",
+      large: "Custom emotional responses in different languages and cultures. Used in therapy, HR, or coaching tools.",
     },
     transparent: {
-      small: "Adds fixed caveats and capability disclaimers through prompts.",
-      medium: "Supports context-aware disclaimers and citation display logic.",
-      large: "Full interpretability + trust layer with interactive source metadata.",
+      small: "Adds simple messages like 'I'm an AI assistant' to keep expectations clear.",
+      medium: "Gives context about answers, including where they come from. Encourages critical thinking.",
+      large: "Provides source citations and confidence scores. Ideal for education or journalism use.",
     },
   },
   bias: {
     transparent: {
-      small: "Adds basic transparency prompts and avoids politically sensitive examples.",
-      medium: "Team-based review of bias-prone outputs and mitigation strategies.",
-      large: "Internal audits, scenario testing, and mitigation logs integrated into workflow.",
+      small: "Clearly explains that the AI may have limitations or blind spots. Helps users stay informed.",
+      medium: "Reviews answers internally to catch common bias issues and adjust prompts.",
+      large: "Audits bias across different topics, collects user feedback, and continuously improves fairness.",
     },
     values: {
-      medium: "Ethics board consultation and topic-specific bias avoidance fine-tuning.",
-      large: "Live red teaming, survey calibration, and user values modeling.",
+      medium: "Consults experts to guide the AI toward specific ethics (e.g., sustainability, inclusion).",
+      large: "Builds an entire ethical strategy including user testing, red teaming, and long-term monitoring.",
     },
     minimize: {
-      large: "Dedicated AI alignment team with red team loops, automated audits, and active monitoring.",
+      large: "A full AI safety team works to reduce as much bias as possible using tools and real-world testing.",
     },
   },
 };
@@ -149,50 +149,39 @@ const unavailableReasons: Record<
 > = {
   data: {
     curated: {
-      small:
-        "Premium data sources require licensing fees that far exceed small budgets.",
+      small: "Trusted sources like journals and newspapers are too expensive for smaller projects.",
     },
     proprietary: {
-      small:
-        "Custom datasets cannot be built within a €50,000 budget due to annotation and QA costs.",
+      small: "Custom-made data with human review takes too much time and money for a small budget.",
     },
   },
   filtering: {
     moderate: {
-      small:
-        "Human-in-the-loop moderation and ML model maintenance are too costly for small budgets.",
+      small: "Combining AI filters with human review isn’t feasible without more resources.",
     },
     strict: {
-      small:
-        "Strict filtering requires advanced dashboards and human staff — unaffordable at this level.",
-      medium:
-        "Enterprise-grade filtering with full-time moderators and alerting systems exceeds medium budgets.",
+      small: "A full moderation team and dashboards are far beyond what a starter budget can handle.",
+      medium: "Medium budgets still can’t afford 24/7 global moderation and enterprise oversight.",
     },
   },
   behavior: {
     directive: {
-      small:
-        "Directive tone tuning requires access to fact-checking pipelines and advanced QA — beyond the basic budget.",
+      small: "Confident, fact-checked answers need more training and validation than this budget allows.",
     },
     empathetic: {
-      small:
-        "Empathy-driven models require emotional dataset fine-tuning and user testing that exceed the small budget.",
+      small: "Emotionally intelligent responses need custom training — too costly for small projects.",
     },
     transparent: {
-      small:
-        "Transparent AI needs source-tracking and dynamic context features which aren’t feasible at this level.",
+      small: "Explaining limitations and sources in detail requires advanced systems not supported here.",
     },
   },
   bias: {
     values: {
-      small:
-        "Developing value-sensitive AI requires ethics consultation and alignment work exceeding small budgets.",
+      small: "Aligning the AI with specific ethical goals involves expert input and review — not doable at this level.",
     },
     minimize: {
-      small:
-        "Bias minimization at scale requires dedicated teams and testing pipelines not possible under €50,000.",
-      medium:
-        "At medium budgets, there’s not enough capacity for enterprise-grade audits and continuous red teaming.",
+      small: "You’d need a dedicated research team and tooling to minimize bias, which isn’t affordable here.",
+      medium: "Full-scale bias mitigation is complex and resource-heavy — even medium budgets fall short.",
     },
   },
 };
