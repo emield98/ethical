@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/tooltip";
 import { GlossaryTooltip } from "./ui-tooltip"
 
+
 const steps = ["budget", "data", "filtering", "behavior", "bias", "summary"];
 const stepTitles = [
   "Budget",
@@ -39,6 +40,7 @@ const stepTitles = [
   "Bias Management",
   "Summary",
 ];
+
 
 type ChatbotChoices = {
   budget: string;
@@ -55,8 +57,8 @@ type ChatbotChoices = {
 const costs: Record<string, Record<string, Record<string, number | null>>> = {
   data: {
     public: { small: 10000, medium: 25000, large: 50000 },
-    curated: { small: null, medium: 150000, large: 700000 },
-    proprietary: { small: 60000, medium: 500000, large: 2500000 },
+    curated: { small: 30000, medium: 150000, large: 700000 },
+    proprietary: { small: 40000, medium: 500000, large: 2500000 },
   },
   filtering: {
     minimal: { small: 500, medium: 5000, large: 20000 },
@@ -198,7 +200,7 @@ const unavailableReasons: Record<
 
 export function ChatbotBuilder() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [choices, setChoices] = useState<ChatbotChoices>({
+  const defaultChoices: ChatbotChoices = {
     budget: "",
     budgetAmount: 0,
     remainingBudget: 0,
@@ -207,7 +209,14 @@ export function ChatbotBuilder() {
     behavior: "",
     adaptToUser: false,
     biasHandling: "",
-  });
+  };
+  const [choices, setChoices] = useState<ChatbotChoices>(defaultChoices);
+
+  useEffect(() => {
+    if (currentStep === 0) {
+      setChoices(defaultChoices);
+    }
+  }, []);
 
   const updateChoice = <K extends keyof ChatbotChoices>(
     category: K,
@@ -489,18 +498,18 @@ export function ChatbotBuilder() {
                       return (
                         <div
                           key={option.id}
-                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
-                            !available
-                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                              : !affordable
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
+                            ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                            : !affordable && !choices.trainingData.includes(option.id)
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
-                          }`}
+                            }`}
                         >
                           <Checkbox
                             id={option.id}
                             checked={choices.trainingData.includes(option.id)}
-                            disabled={!available || !affordable}
+                            disabled={!available || (!affordable && !choices.trainingData.includes(option.id))}
                             onCheckedChange={(checked) => {
                               if (checked) {
                                 if (cost === null) return; // or throw error
@@ -539,9 +548,8 @@ export function ChatbotBuilder() {
                               {available && cost !== null ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={
-                                      affordable ? "default" : "destructive"
-                                    }
+                                    variant={affordable || choices.trainingData.includes(option.id) ? "default" : "destructive"}
+
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -567,7 +575,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && (
+                            {!affordable && available && !choices.trainingData.includes(option.id) && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
@@ -654,19 +662,19 @@ export function ChatbotBuilder() {
                       return (
                         <div
                           key={option.id}
-                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
-                            !available
-                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                              : !affordable
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
+                            ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                            : !affordable && !choices.trainingData.includes(option.id)
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
-                          }`}
+                            }`}
                         >
                           <RadioGroupItem
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || !affordable}
+                            disabled={!available || (!affordable && !choices.trainingData.includes(option.id))}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -679,9 +687,8 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={
-                                      affordable ? "default" : "destructive"
-                                    }
+                                    variant={affordable || choices.trainingData.includes(option.id) ? "default" : "destructive"}
+
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -707,7 +714,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && (
+                            {!affordable && available && !choices.trainingData.includes(option.id) && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
@@ -804,19 +811,19 @@ export function ChatbotBuilder() {
                       return (
                         <div
                           key={option.id}
-                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors biased-option ${
-                            !available
-                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                              : !affordable
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors biased-option ${!available
+                            ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                            : !affordable && !choices.trainingData.includes(option.id)
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
-                          }`}
+                            }`}
                         >
                           <RadioGroupItem
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || !affordable}
+                            disabled={!available || (!affordable && !choices.trainingData.includes(option.id))}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -829,9 +836,8 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={
-                                      affordable ? "default" : "destructive"
-                                    }
+                                    variant={affordable || choices.trainingData.includes(option.id) ? "default" : "destructive"}
+
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -866,7 +872,7 @@ export function ChatbotBuilder() {
                                 {option.characteristics}
                               </p>
                             </div>
-                            {!affordable && available && (
+                            {!affordable && available && !choices.trainingData.includes(option.id) && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
@@ -992,19 +998,19 @@ export function ChatbotBuilder() {
                       return (
                         <div
                           key={option.id}
-                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${
-                            !available
-                              ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                              : !affordable
+                          className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
+                            ? "opacity-50 bg-slate-100 dark:bg-slate-800"
+                            : !affordable && !choices.trainingData.includes(option.id)
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
+
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
-                          }`}
+                            }`}
                         >
                           <RadioGroupItem
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || !affordable}
+                            disabled={!available || (!affordable && !choices.trainingData.includes(option.id))}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -1017,9 +1023,8 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={
-                                      affordable ? "default" : "destructive"
-                                    }
+                                    variant={affordable || choices.trainingData.includes(option.id) ? "default" : "destructive"}
+
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -1045,7 +1050,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && (
+                            {!affordable && available && !choices.trainingData.includes(option.id) && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
@@ -1079,7 +1084,10 @@ export function ChatbotBuilder() {
             <TabsContent value="summary">
               <ChatbotSummary
                 choices={choices}
-                onReset={() => setCurrentStep(0)}
+                onReset={() => {
+                  setChoices(defaultChoices);
+                  setCurrentStep(0);
+                }}
               />
             </TabsContent>
           </Tabs>
