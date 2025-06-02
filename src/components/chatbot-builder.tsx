@@ -54,101 +54,92 @@ type ChatbotChoices = {
 // Cost data structure based on the provided table
 const costs: Record<string, Record<string, Record<string, number | null>>> = {
   data: {
-    public: { small: 3000, medium: 30000, large: 100000 },
-    curated: { small: null, medium: 55000, large: 1200000 },
-    proprietary: { small: 10000, medium: 125000, large: 1000000 },
+    public: { small: 10000, medium: 25000, large: 50000 },
+    curated: { small: null, medium: 150000, large: 700000 },
+    proprietary: { small: 60000, medium: 500000, large: 2500000 },
   },
   filtering: {
-    minimal: { small: 250, medium: 3000, large: 30000 },
-    moderate: { small: null, medium: 20000, large: 300000 },
-    strict: { small: null, medium: null, large: 750000 },
+    minimal: { small: 500, medium: 5000, large: 20000 },
+    moderate: { small: null, medium: 100000, large: 400000 },
+    strict: { small: null, medium: null, large: 1200000 },
   },
   behavior: {
-    directive: { small: 3000, medium: 30000, large: 100000 },
-    empathetic: { small: 3000, medium: 30000, large: 150000 },
-    transparent: { small: 3000, medium: 20000, large: 100000 },
+    directive: { small: 10000, medium: 80000, large: 200000 },
+    empathetic: { small: 15000, medium: 100000, large: 300000 },
+    transparent: { small: 12000, medium: 60000, large: 150000 },
   },
   bias: {
-    transparent: { small: 3000, medium: 15000, large: 50000 },
-    values: { small: null, medium: 60000, large: 350000 },
-    minimize: { small: null, medium: null, large: 750000 },
+    transparent: { small: 8000, medium: 30000, large: 80000 },
+    values: { small: null, medium: 200000, large: 800000 },
+    minimize: { small: null, medium: null, large: 1500000 },
   },
 };
+
 
 const explanations: Record<string, Record<string, Record<string, string>>> = {
   data: {
     public: {
-      small:
-        "Covers cloud compute (AWS, GCP) and developer time to process a small Common Crawl subset.",
-      medium:
-        "Includes broader Common Crawl usage + storage + small-scale data cleaning pipeline.",
-      large:
-        "Includes processing large-scale multilingual data via distributed systems and hiring engineers.",
+      small: "Basic access to open datasets like Common Crawl and Wikipedia, processed via standard scripts.",
+      medium: "Includes broader data cleaning and formatting, with limited multilingual support.",
+      large: "Supports large-scale ingestion pipelines and multilingual normalization across regions.",
     },
     curated: {
-      medium:
-        "Represents a limited license (e.g., a year of news articles via API like NewsAPI).",
-      large:
-        "Reflects major licensing deals like Reuters, scaled down to a specific domain use.",
+      medium: "Access to structured APIs like NewsAPI or academic datasets under license.",
+      large: "Major licensed collections (e.g., legal/corporate documents) for enterprise models.",
     },
     proprietary: {
-      small:
-        "Covers small dataset (2,000–5,000 prompts) via Scale AI or Upwork (~$2–$5 per annotation).",
-      medium:
-        "Includes mid-scale labeling (10k–30k items) with QA + possible internal labeling team.",
-      large:
-        "Enterprise RLHF-style tuning like OpenAI/Anthropic with dedicated alignment teams.",
+      small: "Outsourced dataset creation via freelancers (e.g., prompt-response sets).",
+      medium: "Includes labeling software and internal review teams for data tuning.",
+      large: "Full-scale proprietary corpora + RLHF pipeline with continuous feedback.",
     },
   },
   filtering: {
     minimal: {
-      small: "Free tools like Perspective API + developer setup time.",
-      medium: "Includes moderate API usage (~1M requests/year).",
-      large:
-        "Used as fallback filter layer in enterprise stack with monitoring infrastructure.",
+      small: "Simple toxicity filters using open-source APIs and basic thresholds.",
+      medium: "Moderate use of commercial APIs with dynamic rule evaluation.",
+      large: "Fallback filters in enterprise pipeline with alerting and auto-updates.",
     },
     moderate: {
-      medium:
-        "Includes API usage + part-time moderator ($1,000/month for human-in-the-loop).",
-      large: "Custom classifiers + 2–3 full-time human moderators.",
+      medium: "Includes light human-in-the-loop moderation combined with ML classifiers.",
+      large: "Custom ML classifiers with part-time moderators in key markets.",
     },
     strict: {
-      large:
-        "Custom tooling, moderation dashboard + 10+ moderators across time zones.",
+      large: "Custom dashboards, labeling infrastructure, and 10+ moderators in different time zones.",
     },
   },
   behavior: {
     directive: {
-      small: "Prompt tuning only; relies on standard QA patterns.",
-      medium: "Includes prompt refinement, factuality testing, and confidence balancing.",
-      large: "Expert-reviewed responses, automated fact-checks, and fallback validation logic.",
+      small: "Prompt templates with formal authoritative phrasing, no fine-tuning.",
+      medium: "Fine-tuned behavior on factuality datasets with testing loops.",
+      large: "Real-time corrections, validation layers, and continuous improvement processes.",
     },
     empathetic: {
-      small: "Simple affective tone templates with generic responses.",
-      medium: "Trained with emotion-labeled data + UX testing on tone sensitivity.",
-      large: "Full emotional range using annotated corpora and human-in-the-loop feedback.",
+      small: "Emotion-aware prompt phrasing with basic tone awareness.",
+      medium: "Fine-tuned on emotional datasets + feedback from test users.",
+      large: "Includes multi-language empathy tuning and scenario-based training.",
     },
     transparent: {
-      small: "Adds standard disclaimers via prompt.",
-      medium: "Includes limitations disclosure and source links on demand.",
-      large: "Tracks confidence, adds provenance metadata, and cites sources interactively.",
+      small: "Adds fixed caveats and capability disclaimers through prompts.",
+      medium: "Supports context-aware disclaimers and citation display logic.",
+      large: "Full interpretability + trust layer with interactive source metadata.",
     },
   },
   bias: {
     transparent: {
-      small: "QA pass + add disclosure messages.",
-      medium: "Bias evaluation by team + mitigation prompt engineering.",
-      large: "Policy and internal audits at launch.",
+      small: "Adds basic transparency prompts and avoids politically sensitive examples.",
+      medium: "Team-based review of bias-prone outputs and mitigation strategies.",
+      large: "Internal audits, scenario testing, and mitigation logs integrated into workflow.",
     },
     values: {
-      medium: "Hire ethicist for audit + QA + targeted fine-tuning.",
-      large: "Ongoing alignment staff + testing framework.",
+      medium: "Ethics board consultation and topic-specific bias avoidance fine-tuning.",
+      large: "Live red teaming, survey calibration, and user values modeling.",
     },
     minimize: {
-      large: "Dedicated alignment team + red teaming like OpenAI's approach.",
+      large: "Dedicated AI alignment team with red team loops, automated audits, and active monitoring.",
     },
   },
 };
+
 
 const unavailableReasons: Record<
   string,
@@ -157,47 +148,53 @@ const unavailableReasons: Record<
   data: {
     curated: {
       small:
-        "Premium data sources require minimum licensing fees that exceed small budgets.",
+        "Premium data sources require licensing fees that far exceed small budgets.",
+    },
+    proprietary: {
+      small:
+        "Custom datasets cannot be built within a €50,000 budget due to annotation and QA costs.",
     },
   },
   filtering: {
     moderate: {
       small:
-        "Human moderators and custom filtering systems are too expensive for small budgets.",
+        "Human-in-the-loop moderation and ML model maintenance are too costly for small budgets.",
     },
     strict: {
       small:
-        "Enterprise-grade filtering requires significant infrastructure investment.",
+        "Strict filtering requires advanced dashboards and human staff — unaffordable at this level.",
       medium:
-        "Full enterprise filtering with 24/7 moderation teams exceeds medium budgets.",
+        "Enterprise-grade filtering with full-time moderators and alerting systems exceeds medium budgets.",
     },
   },
   behavior: {
     directive: {
       small:
-        "Directive behavior requires access to expert-verified datasets and advanced fact-checking logic.",
+        "Directive tone tuning requires access to fact-checking pipelines and advanced QA — beyond the basic budget.",
     },
     empathetic: {
       small:
-        "Empathetic responses rely on nuanced NLP models that exceed small budget capabilities.",
+        "Empathy-driven models require emotional dataset fine-tuning and user testing that exceed the small budget.",
     },
     transparent: {
       small:
-        "Transparent AI requires layered explanations and context-tracking systems not feasible at small budgets.",
+        "Transparent AI needs source-tracking and dynamic context features which aren’t feasible at this level.",
     },
   },
   bias: {
     values: {
       small:
-        "Hiring ethics consultants and specialized alignment work exceeds small budgets.",
+        "Developing value-sensitive AI requires ethics consultation and alignment work exceeding small budgets.",
     },
     minimize: {
-      small: "Comprehensive bias mitigation requires dedicated research teams.",
+      small:
+        "Bias minimization at scale requires dedicated teams and testing pipelines not possible under €50,000.",
       medium:
-        "Full bias minimization needs enterprise-scale red teaming and testing.",
+        "At medium budgets, there’s not enough capacity for enterprise-grade audits and continuous red teaming.",
     },
   },
 };
+
 
 export function ChatbotBuilder() {
   const [currentStep, setCurrentStep] = useState(0);
