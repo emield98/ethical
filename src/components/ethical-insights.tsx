@@ -99,12 +99,28 @@ const insights: Record<string, EthicalInsight[]> = {
   ],
   "filtering-strict": [
     {
-      title: "Censorship and Representation Concerns",
+      title: "Balancing Safety and Freedom",
       description:
-        "Combining AI with human moderation offers the most accurate and ethical filtering. However, it raises concerns about privacy, information access, the potential bias of human reviewers, and sometimes may even represent a skewed view of reality.",
+        "Strict filtering does the best job of preventing harmful content. On the other hand, it can also limit the chatbot's ability to engage in open discussions. Consider what you find most important in your chatbot.",
+      category: "filtering",
+    },
+    {
+      title: "Censorship Concerns",
+      description:
+        "Strict filtering can lead to censorship, where important information is withheld from users. This can prevent access to diverse viewpoints and limit critical discussions on sensitive topics.",
       category: "filtering",
       realWorldExample:
-        "Some AI systems have refused to discuss topics like human reproduction or certain historical events due to overly aggressive content filters.",
+        "In 2025, researchers found that DeepSeek AI refused to answer 85% of questions about sensitive political topics in China, often giving nationalistic responses instead. This shows how strict filtering can suppress important information.",
+      learnMoreLink: "https://techcrunch.com/2025/01/29/deepseeks-ai-avoids-answering-85-of-prompts-on-sensitive-topics-related-to-china/",
+    },
+    {
+      title: "Perception of Reality",
+      description:
+        "Strict filtering can create a skewed perception of reality, where users only see sanitized or approved information. This can lead to a lack of critical thinking and an inability to engage with diverse viewpoints.",
+      category: "filtering",
+      realWorldExample:
+        "In 2024, Google's Gemini was criticized for generating overly potically correct image generations of people and historical figures.",
+      learnMoreLink: "https://www.cnn.com/2024/02/22/tech/google-gemini-ai-image-generator",
     },
   ],
   "filtering-moderate": [
@@ -122,7 +138,8 @@ const insights: Record<string, EthicalInsight[]> = {
         "Minimal filtering prioritizes free access to all information but risks exposing users to harmful, offensive, or misleading content. It shifts responsibility to users and may be unsafe in public or educational settings.",
       category: "filtering",
       realWorldExample:
-        "Several AI chatbots have generated instructions for illegal activities or harmful/misleading content when filtering was insufficient.",
+        "In 2023, the National Eating Disorders Association (NEDA) faced backlash after their AI chatbot provided harmful advice to their users with eating disorders about dieting and weight loss.",
+      learnMoreLink: "https://www.cbsnews.com/news/eating-disorder-helpline-chatbot-disabled/",
     },
   ],
   "behavior-directive": [
