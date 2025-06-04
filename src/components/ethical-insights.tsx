@@ -111,7 +111,7 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "Contextual Understanding Challenges",
       description:
-        "Moderate filtering aims to balance safety with open discussion but AI struggles to understand context. This can lead to inconsistent moderation or the accidental blocking of valid conversations.",
+        "Moderate filtering aims to balance safety with open discussion, but AI struggles to understand context. This can lead to inconsistent moderation or the accidental blocking of valid conversations.",
       category: "filtering",
     },
   ],

@@ -634,7 +634,7 @@ export function ChatbotBuilder() {
                         id: "moderate",
                         label: "Moderate Filtering",
                         description:
-                          "Your AI can have respectful discussions on sensitive topics (eg gender identity, racism, politics, or religion) while blocking harmful content.",
+                          "Your AI can have respectful discussions on sensitive topics (e.g. gender identity, racism, politics, or religion) while blocking harmful content.",
                       },
                       {
                         id: "strict",
