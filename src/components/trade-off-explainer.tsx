@@ -69,7 +69,7 @@ const tradeOffs: Record<string, TradeOff> = {
     title: "Strict Content Filtering",
     description: "Blocking all potentially offensive, harmful, or controversial content.",
     pros: [
-      "Safest option for all audiences including children",
+      "Good for public-facing or vulnerable audiences",
       "Minimizes legal and reputational risks",
       "Clearer boundaries for users",
       "Reduces potential for harm or offense",
@@ -86,15 +86,16 @@ const tradeOffs: Record<string, TradeOff> = {
     description: "Allowing discussion of sensitive topics in educational contexts while blocking harmful content.",
     pros: [
       "Balances safety with educational value",
-      "More useful for research and learning",
-      "Can discuss important but sensitive topics with appropriate context",
+      "Useful for research and learning",
+      "Can discuss important, but sensitive topics with appropriate context",
       "More flexible than strict filtering",
     ],
     cons: [
-      "Requires more sophisticated content moderation systems",
-      "May be inconsistent in edge cases",
-      "Higher risk of allowing some harmful content through",
-      "More difficult to implement effectively",
+      "Relies on AI’s imperfect ability to read context",
+      "May still let subtle bias or some harmful content through",
+      "Users may perceive filtering as either too strict or too loose",
+      "May unintentionally block valid content in sensitive discussions",
+      "Difficult to implement effectively",
     ],
   },
   "filtering-minimal": {
@@ -103,11 +104,14 @@ const tradeOffs: Record<string, TradeOff> = {
     pros: [
       "Maximum information access and utility",
       "Fewer restrictions on legitimate research",
-      "Less risk of censoring important topics",
+      "Less risk of censoring important topics and perspectives",
+      "Allows for open discussion of controversial issues",
       "More transparent about potential risks",
+      "Low cost and fast performance",
     ],
     cons: [
-      "Higher risk of generating harmful or offensive content",
+      "Higher risk of harmful or offensive outputs",
+      "Access to all information, including hate speech and misinformation",
       "Not suitable for all audiences",
       "Greater legal and reputational risks",
       "Requires more user discretion and responsibility",
