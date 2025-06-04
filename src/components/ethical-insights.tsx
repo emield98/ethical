@@ -99,9 +99,9 @@ const insights: Record<string, EthicalInsight[]> = {
   ],
   "filtering-strict": [
     {
-      title: "Censorship Concerns",
+      title: "Censorship and Representation Concerns",
       description:
-        "Overly strict content filtering can prevent discussion of important topics like health, politics, or social issues, raising concerns about censorship and limiting educational value.",
+        "Combining AI with human moderation offers the most accurate and ethical filtering. However, it raises concerns about privacy, information access, the potential bias of human reviewers, and sometimes may even represent a skewed view of reality.",
       category: "filtering",
       realWorldExample:
         "Some AI systems have refused to discuss topics like human reproduction or certain historical events due to overly aggressive content filters.",
@@ -111,7 +111,7 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "Contextual Understanding Challenges",
       description:
-        "Moderate filtering requires sophisticated understanding of context to determine when sensitive topics are appropriate. This is technically challenging and may lead to inconsistent results.",
+        "Moderate filtering aims to balance safety with open discussion, but AI struggles to understand context. This can lead to inconsistent moderation or the accidental blocking of valid conversations.",
       category: "filtering",
     },
   ],
@@ -119,10 +119,10 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "Harmful Content Risks",
       description:
-        "Minimal content filtering increases the risk of generating harmful, offensive, or misleading content that could damage users or your organization's reputation.",
+        "Minimal filtering prioritizes free access to all information but risks exposing users to harmful, offensive, or misleading content. It shifts responsibility to users and may be unsafe in public or educational settings.",
       category: "filtering",
       realWorldExample:
-        "Several AI chatbots have generated instructions for illegal activities or harmful content when filtering was insufficient.",
+        "Several AI chatbots have generated instructions for illegal activities or harmful/misleading content when filtering was insufficient.",
     },
   ],
   "behavior-directive": [

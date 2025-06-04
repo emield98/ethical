@@ -628,19 +628,19 @@ export function ChatbotBuilder() {
                         id: "minimal",
                         label: "Minimal Filtering",
                         description:
-                          "Only filter illegal content. Maximum information access but higher risk.",
+                          "Your AI will only block illegal content. It allows full access to information but the risk of generating offensive or harmful material increases.",
                       },
                       {
                         id: "moderate",
                         label: "Moderate Filtering",
                         description:
-                          "Allow educational discussion of sensitive topics while blocking harmful content.",
+                          "Your AI can have respectful discussions on sensitive topics (e.g. gender identity, racism, politics, or religion) while blocking harmful content.",
                       },
                       {
                         id: "strict",
                         label: "Enterprise Filtering",
                         description:
-                          "Comprehensive filtering with human moderators and advanced AI detection.",
+                          "Use advanced AI models alongside human moderators to provide thorough, context-sensitive filtering. Your AI is designed to minimize harm while preserving meaningful dialogue.",
                       },
                     ].map((option) => {
                       const cost = getCost("filtering", option.id);
