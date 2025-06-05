@@ -21,7 +21,7 @@ import { BudgetTracker } from "./budget-tracker";
 import { ChatbotAnimation } from "./chatbot-animation";
 import { StepProgress } from "./step-progress";
 import { Badge } from "@/components/ui/badge";
-import { Info } from "lucide-react";
+import { Info, RefreshCw } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -585,9 +585,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     Next: Content Filtering
                   </Button>
@@ -724,9 +727,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     Next: Behavior
                   </Button>
@@ -920,9 +926,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button
                     onClick={nextStep}
                     disabled={!isStepComplete()}
@@ -1060,9 +1069,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     See Your Chatbot
                   </Button>
