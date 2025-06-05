@@ -21,7 +21,7 @@ import { BudgetTracker } from "./budget-tracker";
 import { ChatbotAnimation } from "./chatbot-animation";
 import { StepProgress } from "./step-progress";
 import { Badge } from "@/components/ui/badge";
-import { Info, RefreshCw } from "lucide-react";
+import { Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -585,12 +585,9 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={() => {
-  setChoices(defaultChoices);
-  setCurrentStep(0);
-}}>
-  <RefreshCw className="h-4 w-4" /> Start Over
-</Button>
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     Next: Content Filtering
                   </Button>
@@ -727,12 +724,9 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={() => {
-  setChoices(defaultChoices);
-  setCurrentStep(0);
-}}>
-  <RefreshCw className="h-4 w-4" /> Start Over
-</Button>
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     Next: Behavior
                   </Button>
@@ -926,12 +920,9 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={() => {
-  setChoices(defaultChoices);
-  setCurrentStep(0);
-}}>
-  <RefreshCw className="h-4 w-4" /> Start Over
-</Button>
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
                   <Button
                     onClick={nextStep}
                     disabled={!isStepComplete()}
@@ -973,19 +964,19 @@ export function ChatbotBuilder() {
                         id: "transparent",
                         label: "Acknowledge Transparently",
                         description:
-                          "Openly disclose potential biases and limitations when providing information.",
+                          "No debiasing, instead openly disclose potential biases and limitations when providing information.",
                       },
                       {
                         id: "values",
-                        label: "Align with Specific Values",
+                        label: "Debiasing the dataset",
                         description:
-                          "Intentionally design the chatbot to promote certain values and perspectives.",
+                          "Attempting to remove harmful biases in the data before training.",
                       },
                       {
                         id: "minimize",
                         label: "Minimize All Biases",
                         description:
-                          "Attempt to identify and reduce all forms of bias through comprehensive testing.",
+                          "Debiasing at every step of the models training using methods such as GN-Glove and Hard-Debiased.",
                       },
                     ].map((option) => {
                       const cost = getCost("bias", option.id);
@@ -1069,12 +1060,9 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={() => {
-  setChoices(defaultChoices);
-  setCurrentStep(0);
-}}>
-  <RefreshCw className="h-4 w-4" /> Start Over
-</Button>
+                  <Button variant="outline" onClick={prevStep}>
+                    Back
+                  </Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     See Your Chatbot
                   </Button>

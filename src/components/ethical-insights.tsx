@@ -195,28 +195,32 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "False Neutrality",
       description:
-        "Attempts to minimize all biases often result in systems that appear neutral but actually reflect status quo biases or avoid taking positions on important issues.",
+        "The case of lipstick on a pig. These methods can only cover up the biases involved in de model but will not remove systematic gender biases in word embeddings. Risk of inaccurate outcomes due to overdebiasing.",
       category: "bias",
       realWorldExample:
-        "Some 'neutral' AI systems avoid acknowledging scientific consensus on topics like climate change in an attempt to avoid bias.",
+        "The Gemini software made by google produced historically inaccurate output as a result of overly debiasing. https://www.theguardian.com/technology/2024/feb/28/google-chief-ai-tools-photo-diversity-offended-users",
+      learnMoreLink: "https://www.youtube.com/watch?v=V08bH95W9eM",
     },
   ],
   "bias-values": [
     {
-      title: "Value Imposition",
+      title: "Debiasing Dataset",
       description:
-        "Explicitly aligning AI with specific values raises questions about whose values are being prioritized and whether users have a choice in the matter.",
+        "Debiasing the dataset before training of the model starts",
       category: "bias",
       realWorldExample:
-        "AI systems designed to promote specific political or social values have faced criticism for potentially manipulating users.",
+        "OpenAI used cleaned datasets for GPT-3 with the hope that this would lead to a model with less bias. The result was a model which was perceived to have no bias, but was in fact still biased. This created a false sense of security.",
+      learnMoreLink: "https://aclanthology.org/2021.nuse-1.5/#:~:text=Our%20study%20raises%20questions%20on%20how%20one%20can,Third%20Workshop%20on%20Narrative%20Understanding%2C%20pages%2048%E2%80%9355%2C%20Virtual.", 
     },
   ],
   "bias-transparent": [
     {
-      title: "Undermining Trust",
+      title: "Reinforcing stereotypes",
       description:
-        "Constantly acknowledging limitations and biases may reduce user confidence in the system, even when the information provided is accurate and helpful.",
+        "Models with large biases often lead to public outrage, despite previous warnings that the model might be biased",
       category: "bias",
+      realWorldExample: "Meta released Galactica without debiasing but with warnings about potential bias, yet the model quickly lost public trust after generating misleading and biased scientific content, leading to its removal just three days later.",
+      learnMoreLink: "https://www.technologyreview.com/2022/11/18/1063487/meta-large-language-model-ai-only-survived-three-days-gpt-3-science/"
     },
   ],
   "budget-low": [
