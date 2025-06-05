@@ -130,14 +130,14 @@ const explanations: Record<string, Record<string, Record<string, string>>> = {
     transparent: {
       small: "Clearly explains that the AI may have limitations or blind spots. Helps users stay informed.",
       medium: "Reviews answers internally to catch common bias issues and adjust prompts.",
-      large: "Audits bias across different topics, collects user feedback, and continuously improves fairness.",
+      large: "Audits bias across different topics, collects user feedback, and continuously improves reporting.",
     },
     values: {
-      medium: "Consults experts to guide the AI toward specific ethics (e.g., sustainability, inclusion).",
-      large: "Builds an entire ethical strategy including user testing, red teaming, and long-term monitoring.",
+      medium: "Consults experts to adjust dataset in order to reduce the biases contained in it.",
+      large: "Builds an entire ethical strategy, using tools such as Hard-debiasing.",
     },
     minimize: {
-      large: "A full AI safety team works to reduce as much bias as possible using tools and real-world testing.",
+      large: "A full AI safety team works to reduce as much bias as possible using tools such as GN-Glove and Hard-Debiasing.",
     },
   },
 };
