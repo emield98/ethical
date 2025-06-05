@@ -968,7 +968,7 @@ export function ChatbotBuilder() {
                       },
                       {
                         id: "values",
-                        label: "Debiasing the dataset",
+                        label: "Debiasing the Dataset",
                         description:
                           "Attempting to remove harmful biases in the data before training.",
                       },
