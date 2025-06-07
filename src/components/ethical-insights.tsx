@@ -107,10 +107,10 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "Censorship Concerns",
       description:
-        "Strict filtering can lead to censorship, where important or controversial information is hidden from users. This can limit access to diverse viewpoints, reduce critical discussion, and create a distorted perception of reality, where only sanitized or approved content is shown.",
+        "Strict filtering can lead to censorship, where important or controversial information is hidden from users. This can limit access to diverse viewpoints, reduce critical discussion, and create a distorted perception of reality,where only sanitized or approved content is shown.",
       category: "filtering",
       realWorldExample:
-        "In 2025, researchers found that DeepSeek AI refused to answer 85% of questions about sensitive political topics in China, often giving nationalistic responses. Similarly, Google's Gemini was criticized in 2024 for generating overly politically correct images of historical figures, raising concerns about AI shaping how users see the world.",
+        "In 2025, researchers found that DeepSeek AI refused to answer 85% of questions about sensitive political topics in China, often giving nationalistic responses.",
       learnMoreLink: "https://techcrunch.com/2025/01/29/deepseeks-ai-avoids-answering-85-of-prompts-on-sensitive-topics-related-to-china/",
     }
   ],
