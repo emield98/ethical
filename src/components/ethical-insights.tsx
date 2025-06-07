@@ -107,23 +107,20 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "Censorship Concerns",
       description:
-        "Strict filtering can lead to censorship, where important information is withheld from users. This can prevent access to diverse viewpoints and limit critical discussions on sensitive topics.",
+        "Strict filtering can lead to censorship, where important or controversial information is hidden from users. This can limit access to diverse viewpoints, reduce critical discussion, and create a distorted perception of reality, where only sanitized or approved content is shown.",
       category: "filtering",
       realWorldExample:
-        "In 2025, researchers found that DeepSeek AI refused to answer 85% of questions about sensitive political topics in China, often giving nationalistic responses instead. This shows how strict filtering can suppress important information.",
+        "In 2025, researchers found that DeepSeek AI refused to answer 85% of questions about sensitive political topics in China, often giving nationalistic responses. Similarly, Google's Gemini was criticized in 2024 for generating overly politically correct images of historical figures, raising concerns about AI shaping how users see the world.",
       learnMoreLink: "https://techcrunch.com/2025/01/29/deepseeks-ai-avoids-answering-85-of-prompts-on-sensitive-topics-related-to-china/",
-    },
-    {
-      title: "Perception of Reality",
-      description:
-        "Strict filtering can create a skewed perception of reality, where users only see sanitized or approved information. This can lead to a lack of critical thinking and an inability to engage with diverse viewpoints.",
-      category: "filtering",
-      realWorldExample:
-        "In 2024, Google's Gemini was criticized for generating overly potically correct image generations of people and historical figures.",
-      learnMoreLink: "https://www.cnn.com/2024/02/22/tech/google-gemini-ai-image-generator",
-    },
+    }
   ],
   "filtering-moderate": [
+    {
+      title: "Balancing Safety and Freedom",
+      description:
+        "Moderate filtering aims to balance safety with open discussion, but it can still lead to the exclusion of some important information. Consider whether this middle is the right approach, or if you prefer a stricter or more minimal filtering approach.",
+      category: "filtering",
+    },
     {
       title: "Contextual Understanding Challenges",
       description:
@@ -133,13 +130,19 @@ const insights: Record<string, EthicalInsight[]> = {
   ],
   "filtering-minimal": [
     {
-      title: "Harmful Content Risks",
+      title: "Balancing Safety and Freedom",
       description:
-        "Minimal filtering prioritizes free access to all information but risks exposing users to harmful, offensive, or misleading content. It shifts responsibility to users and may be unsafe in public or educational settings.",
+        "Minimal filtering allows for more open discussions and diverse viewpoints, but also risks exposing users to harmful or inappropriate content, even when unintended. Consider the trade-offs between safety and freedom of information access and expression.",
       category: "filtering",
       realWorldExample:
         "In 2023, the National Eating Disorders Association (NEDA) faced backlash after their AI chatbot provided harmful advice to their users with eating disorders about dieting and weight loss.",
       learnMoreLink: "https://www.cbsnews.com/news/eating-disorder-helpline-chatbot-disabled/",
+    },
+    {
+      title: "Malicious Use Risks",
+      description:
+        "The minimal filtering approach can lead to the AI being used for harmful purposes, such as generating hate speech, misinformation, or even illegal content. This puts more responsibilities in the hands of the user and can have serious consequences for both users and the platform hosting the AI.",
+      category: "filtering",
     },
   ],
   "behavior-directive": [
