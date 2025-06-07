@@ -103,6 +103,9 @@ const insights: Record<string, EthicalInsight[]> = {
       description:
         "Strict filtering does the best job of preventing harmful content. On the other hand, it can also limit the chatbot's ability to engage in open discussions. Consider what you find most important in your chatbot.",
       category: "filtering",
+      realWorldExample:
+        "In 2024, Google's Gemini was criticized for generating overly potically correct image generations of people and historical figures. While creating a more inclusive AI, it also led to backlash for being overly sanitized and not representing historical accuracy.",
+      learnMoreLink: "https://www.cnn.com/2024/02/22/tech/google-gemini-ai-image-generator",
     },
     {
       title: "Censorship Concerns",
