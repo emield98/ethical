@@ -340,22 +340,22 @@ export function ChatbotBuilder() {
                       const available = isAvailable("data", option.id);
                       const affordable = canAfford("data", option.id);
                       const budgetLevel = getBudgetLevel();
+                      const selected = choices.trainingData.includes(option.id);
 
                       return (
                         <div
                           key={option.id}
                           className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
                             ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                            : !affordable && choices.contentFiltering !== option.id
+                            : !affordable && !selected
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
-
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
                             }`}
                         >
                           <Checkbox
                             id={option.id}
-                            checked={choices.trainingData.includes(option.id)}
-                            disabled={!available || (!affordable && choices.contentFiltering !== option.id)}
+                            checked={selected}
+                            disabled={!available || (!affordable && !selected)}
                             onCheckedChange={(checked) => {
                               if (checked) {
                                 if (cost === null) return; // or throw error
@@ -394,8 +394,7 @@ export function ChatbotBuilder() {
                               {available && cost !== null ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={affordable || choices.contentFiltering === option.id ? "default" : "destructive"}
-
+                                    variant={affordable || selected ? "default" : "destructive"}
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -421,7 +420,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && choices.contentFiltering !== option.id && (
+                            {!affordable && available && !selected && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
@@ -488,13 +487,14 @@ export function ChatbotBuilder() {
                       const available = isAvailable("filtering", option.id);
                       const affordable = canAfford("filtering", option.id);
                       const budgetLevel = getBudgetLevel();
+                      const selected = choices.contentFiltering === option.id;
 
                       return (
                         <div
                           key={option.id}
                           className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
                             ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                            : !affordable && choices.contentFiltering !== option.id
+                            : !affordable && !selected
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
                             }`}
@@ -503,7 +503,7 @@ export function ChatbotBuilder() {
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || (!affordable && choices.contentFiltering !== option.id)}
+                            disabled={!available || (!affordable && !selected)}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -516,7 +516,7 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={affordable || choices.contentFiltering === option.id ? "default" : "destructive"}
+                                    variant={affordable || selected ? "default" : "destructive"}
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -542,7 +542,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && choices.contentFiltering !== option.id && (
+                            {!affordable && available && !selected && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
@@ -638,15 +638,15 @@ export function ChatbotBuilder() {
                       const available = isAvailable("behavior", option.id);
                       const affordable = canAfford("behavior", option.id);
                       const budgetLevel = getBudgetLevel();
+                      const selected = choices.behavior === option.id;
 
                       return (
                         <div
                           key={option.id}
                           className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors biased-option ${!available
                             ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                            : !affordable && choices.contentFiltering !== option.id
+                            : !affordable && !selected
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
-
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
                             }`}
                         >
@@ -654,7 +654,7 @@ export function ChatbotBuilder() {
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || (!affordable && choices.contentFiltering !== option.id)}
+                            disabled={!available || (!affordable && !selected)}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -667,8 +667,7 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={affordable || choices.contentFiltering === option.id ? "default" : "destructive"}
-
+                                    variant={affordable || selected ? "default" : "destructive"}
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -703,7 +702,7 @@ export function ChatbotBuilder() {
                                 {option.characteristics}
                               </p>
                             </div>
-                            {!affordable && available && choices.contentFiltering !== option.id && (
+                            {!affordable && available && !selected && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
@@ -828,15 +827,15 @@ export function ChatbotBuilder() {
                       const available = isAvailable("bias", option.id);
                       const affordable = canAfford("bias", option.id);
                       const budgetLevel = getBudgetLevel();
+                      const selected = choices.biasHandling === option.id;
 
                       return (
                         <div
                           key={option.id}
                           className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
                             ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                            : !affordable && choices.contentFiltering !== option.id
+                            : !affordable && !selected
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
-
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
                             }`}
                         >
@@ -844,7 +843,7 @@ export function ChatbotBuilder() {
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || (!affordable && choices.contentFiltering !== option.id)}
+                            disabled={!available || (!affordable && !selected)}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -857,8 +856,7 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={affordable || choices.contentFiltering === option.id ? "default" : "destructive"}
-
+                                    variant={affordable || selected ? "default" : "destructive"}
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -884,7 +882,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && choices.contentFiltering !== option.id && (
+                            {!affordable && available && !selected && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
