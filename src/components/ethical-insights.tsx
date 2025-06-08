@@ -49,36 +49,38 @@ const commonInsights: EthicalInsight[] = [
 ]
 
 const insights: Record<string, EthicalInsight[]> = {
-  "budget-small": [
-    {
-      title: "Limited Resources for Ethical Oversight",
-      description:
-        "Low budgets often mean fewer resources for ethical oversight, monitoring, and refinement of AI systems, which can lead to increased risks of unethical behavior.",
-      category: "budget",
-      realWorldExample:
-        "Smaller companies with limited AI safety resources have experienced more public incidents with their AI systems.",
-    },
-  ],
-  "budget-medium": [
-    {
-      title: "Balancing Cost and Ethical Responsibility",
-      description:
-        "Medium budgets allow for some ethical considerations, but may still fall short in areas like comprehensive testing, monitoring, and user education.",
-      category: "budget",
-      realWorldExample:
-        "Many startups struggle to balance cost constraints with the need for ethical AI practices, leading to potential risks in their AI deployments.",
+"budget-small": [
+  {
+    title: "Ethics on a Shoestring",
+    description:
+      "Small budgets often exclude structured ethical audits, safety testing, or long-term risk assessment. Developers may rely on free or low-quality tools and datasets, unintentionally embedding harmful patterns into the system. Ethical blind spots often go unnoticed due to time and resource pressure.",
+    category: "budget",
+    realWorldExample:
+      "In 2023, a small startup released an AI mental health chatbot (Tessa) that offered inappropriate advice due to a lack of professional oversight and dataset review — leading to widespread backlash and its eventual takedown.",
+    learnMoreLink: "https://www.cbsnews.com/news/eating-disorder-helpline-chatbot-disabled/",
     }
-  ],
-  "budget-large": [
-    {
-      title: "Increased Ethical Responsibility",
-      description:
-        "Higher budgets enable more powerful AI systems, which come with greater ethical responsibilities due to their increased influence and reach.",
-      category: "budget",
-      realWorldExample:
-        "Large language model providers have faced intense scrutiny and higher expectations for responsible deployment than smaller models.",
-    },
-  ],
+],
+"budget-medium": [
+  {
+    title: "Partial Oversight, Partial Blindness",
+    description:
+      "Medium budgets often enable ethical intentions without full execution. While teams can afford audits or fairness testing in some areas, they might skip others (e.g., long-term monitoring or multilingual bias detection). Tradeoffs must be made between performance, safety, and equity.",
+    category: "budget",
+  }
+],
+
+"budget-large": [
+  {
+    title: "Power at a Price: Ethical Responsibility at Scale",
+    description:
+      "Large budgets support cutting-edge models — but with immense energy consumption, massive compute usage (e.g., GPU clusters), and greater societal influence. Ethical responsibility scales with power: deploying high-impact AI requires global fairness, sustainability, and accountability frameworks.",
+    category: "budget",
+    realWorldExample:
+      "Training GPT-3 required hundreds of petaflop/s-days of compute, consuming energy equivalent to multiple U.S. households over a year. Large tech firms have since faced pressure to account for the environmental and social externalities of scaling AI systems.",
+    learnMoreLink: "https://higes.substack.com/p/the-energy-cost-of-teaching-machines-diving-deep-into-energy-and-llms-d01f7e1acb12?utm_source=chatgpt.com",
+    }
+],
+
   "data-public": [
     {
       title: "Quality Control Challenges",
