@@ -10,18 +10,17 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { insights, commonInsights } from "./ethical-insights"
 
 // Define EthicalInsight type if not imported from elsewhere
-type EthicalInsight = {
+interface EthicalInsight {
   title: string
   description: string
+  category: string
   realWorldExample?: string
   learnMoreLink?: string
+  sources?: any[]
   applicableScenarios?: string[]
 }
 
-
-
-
-type ChatbotChoices = {
+interface ChatbotChoices {
   budget: string
   budgetAmount: number
   remainingBudget: number
@@ -31,38 +30,6 @@ type ChatbotChoices = {
   adaptToUser: boolean
   biasHandling: string
 }
-
-function getRelevantInsights(choices: ChatbotChoices): EthicalInsight[] {
-  const stepKeys = [
-    `budget-${choices.budget}`,
-    ...choices.trainingData.map(d => `data-${d}`),
-    `filtering-${choices.contentFiltering}`,
-    `behavior-${choices.behavior}`,
-    `bias-${choices.biasHandling}`,
-  ]
-
-  const result: EthicalInsight[] = []
-
-  stepKeys.forEach(key => {
-    if (insights[key]) {
-      result.push(...insights[key])
-    }
-  })
-
-  // Add common insights if applicable
-  commonInsights.forEach(insight => {
-    if (insight.applicableScenarios?.some(key => stepKeys.includes(key))) {
-      result.push(insight)
-    }
-  })
-
-  if (choices.adaptToUser && insights["adaptToUser-true"]) {
-    result.push(...insights["adaptToUser-true"])
-  }
-
-  return result
-}
-
 
 export function ChatbotSummary({
   choices,
@@ -109,6 +76,55 @@ export function ChatbotSummary({
       }
     })
     return labels.join(", ") || "No Data Selected"
+  }
+
+
+  function getRelevantInsights(choices: ChatbotChoices): EthicalInsight[] {
+    const stepKeys = [
+      `budget-${choices.budget}`,
+      ...choices.trainingData.map((d) => `data-${d}`),
+      `filtering-${choices.contentFiltering}`,
+      `behavior-${choices.behavior}`,
+      `bias-${choices.biasHandling}`,
+    ]
+
+    let result: EthicalInsight[] = []
+
+    stepKeys.forEach((key) => {
+      if (insights[key]) {
+        result.push(...insights[key])
+      }
+    })
+
+    commonInsights.forEach((insight) => {
+      if (insight.applicableScenarios?.some((key) => stepKeys.includes(key))) {
+        result.push(insight)
+      }
+    })
+
+    if (choices.adaptToUser && insights["adaptToUser-true"]) {
+      result.push(...insights["adaptToUser-true"])
+    }
+
+    return result
+  }
+
+  const CATEGORY_LABELS: Record<string, string> = {
+    budget: "Budget",
+    data: "Training Data",
+    filtering: "Content Filtering",
+    behavior: "Behavior",
+    bias: "Bias Handling",
+    adaptToUser: "Adaptive Behavior",
+  }
+
+
+  function groupInsightsByCategory(insights: EthicalInsight[]) {
+    return insights.reduce((acc, insight) => {
+      acc[insight.category] = acc[insight.category] || []
+      acc[insight.category].push(insight)
+      return acc
+    }, {} as Record<string, EthicalInsight[]>)
   }
 
   const spentBudget = choices.budgetAmount - choices.remainingBudget
@@ -246,30 +262,39 @@ export function ChatbotSummary({
 
           <TabsContent value="risks" className="pt-4 space-y-4">
             <Alert className="mb-4">
-              <AlertTitle>Ethical Insights</AlertTitle>
+              <AlertTitle>Important Note</AlertTitle>
               <AlertDescription>
-                Insights below are based on your configuration.
+                All AI chatbots come with ethical considerations. These risks vary based on your design choices.
               </AlertDescription>
             </Alert>
-            {getRelevantInsights(choices).map((insight, index) => (
-              <div key={index} className="p-4 border rounded-lg space-y-1">
-                <h4 className="font-medium text-base">{insight.title}</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">{insight.description}</p>
-                {insight.realWorldExample && (
-                  <p className="text-xs italic text-slate-500">e.g. {insight.realWorldExample}</p>
-                )}
-                {insight.learnMoreLink && (
-                  <a
-                    href={insight.learnMoreLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-600 hover:underline"
-                  >
-                    Learn more
-                  </a>
-                )}
-              </div>
-            ))}
+            {Object.entries(groupInsightsByCategory(getRelevantInsights(choices))).map(
+              ([category, group], i) => (
+                <div key={i} className="space-y-3">
+                  <h3 className="text-lg font-semibold border-b pb-1">
+                    {CATEGORY_LABELS[category] || category.charAt(0).toUpperCase() + category.slice(1)}
+                  </h3>
+                  {group.map((insight, j) => (
+                    <div key={j} className="p-4 border rounded-lg space-y-1">
+                      <h4 className="font-medium text-base">{insight.title}</h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{insight.description}</p>
+                      {insight.realWorldExample && (
+                        <p className="text-xs italic text-slate-500">e.g. {insight.realWorldExample}</p>
+                      )}
+                      {insight.learnMoreLink && (
+                        <a
+                          href={insight.learnMoreLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:underline"
+                        >
+                          Learn more
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
           </TabsContent>
 
           <TabsContent value="examples" className="pt-4 space-y-4">
