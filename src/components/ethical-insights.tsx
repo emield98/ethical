@@ -7,7 +7,7 @@ import { AlertCircle, BookOpen, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Source } from "@/components/source-citation"
 
-type InsightCategory = "data" | "filtering" | "bias" | "business" | "technical"
+type InsightCategory = "budget" | "data" | "filtering" | "bias" | "business" | "technical"
 
 interface Source {
   name: string
@@ -49,6 +49,36 @@ const commonInsights: EthicalInsight[] = [
 ]
 
 const insights: Record<string, EthicalInsight[]> = {
+  "budget-small": [
+    {
+      title: "Limited Resources for Ethical Oversight",
+      description:
+        "Low budgets often mean fewer resources for ethical oversight, monitoring, and refinement of AI systems, which can lead to increased risks of unethical behavior.",
+      category: "budget",
+      realWorldExample:
+        "Smaller companies with limited AI safety resources have experienced more public incidents with their AI systems.",
+    },
+  ],
+  "budget-medium": [
+    {
+      title: "Balancing Cost and Ethical Responsibility",
+      description:
+        "Medium budgets allow for some ethical considerations, but may still fall short in areas like comprehensive testing, monitoring, and user education.",
+      category: "budget",
+      realWorldExample:
+        "Many startups struggle to balance cost constraints with the need for ethical AI practices, leading to potential risks in their AI deployments.",
+    }
+  ],
+  "budget-large": [
+    {
+      title: "Increased Ethical Responsibility",
+      description:
+        "Higher budgets enable more powerful AI systems, which come with greater ethical responsibilities due to their increased influence and reach.",
+      category: "budget",
+      realWorldExample:
+        "Large language model providers have faced intense scrutiny and higher expectations for responsible deployment than smaller models.",
+    },
+  ],
   "data-public": [
     {
       title: "Quality Control Challenges",

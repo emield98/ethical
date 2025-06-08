@@ -21,7 +21,7 @@ import { BudgetTracker } from "./budget-tracker";
 import { ChatbotAnimation } from "./chatbot-animation";
 import { StepProgress } from "./step-progress";
 import { Badge } from "@/components/ui/badge";
-import { Info } from "lucide-react";
+import { Info, RefreshCw } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -375,67 +375,59 @@ export function ChatbotBuilder() {
                     }}
                     className="space-y-4"
                   >
-                    <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                      <RadioGroupItem
-                        value="small"
-                        id="small"
-                        className="mt-1"
-                      />
-                      <div className="space-y-2 flex-1">
-                        <Label
-                          htmlFor="small"
-                          className="text-base font-medium"
-                        >
-                          Small Budget - {formatCurrency(50000)}
-                        </Label>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Perfect for startups and small projects. You'll need
-                          to make careful choices and focus on essential
-                          features.
-                        </p>
+                    {[
+                      {
+                        id: "small",
+                        label: "Small Budget",
+                        description:
+                          "Perfect for startups and small projects. You'll need to make careful choices and focus on essential features.",
+                        amount: 50000,
+                      },
+                      {
+                        id: "medium",
+                        label: "Medium Budget",
+                        description:
+                          "Good for established companies. You can afford quality features but still need to prioritize.",
+                        amount: 500000,
+                      },
+                      {
+                        id: "large",
+                        label: "Large Budget",
+                        description:
+                          "Enterprise-level budget. You can afford premium features and comprehensive solutions.",
+                        amount: 5000000,
+                      },
+                    ].map((option) => (
+                      <div
+                        key={option.id}
+                        className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                      >
+                        <RadioGroupItem
+                          value={option.id}
+                          id={option.id}
+                          className="mt-1"
+                        />
+                        <div className="space-y-2 flex-1">
+                          <Label
+                            htmlFor={option.id}
+                            className="text-base font-medium"
+                          >
+                            {option.label} -{" "}
+                            {formatCurrency(option.amount)}
+                          </Label>
+                          <p className="text-sm text-slate-500 dark:text-slate-400">
+                            {option.description}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                      <RadioGroupItem
-                        value="medium"
-                        id="medium"
-                        className="mt-1"
-                      />
-                      <div className="space-y-2 flex-1">
-                        <Label
-                          htmlFor="medium"
-                          className="text-base font-medium"
-                        >
-                          Medium Budget - {formatCurrency(500000)}
-                        </Label>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Good for established companies. You can afford quality
-                          features but still need to prioritize.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                      <RadioGroupItem
-                        value="large"
-                        id="large"
-                        className="mt-1"
-                      />
-                      <div className="space-y-2 flex-1">
-                        <Label
-                          htmlFor="large"
-                          className="text-base font-medium"
-                        >
-                          Large Budget - {formatCurrency(5000000)}
-                        </Label>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Enterprise-level budget. You can afford premium
-                          features and comprehensive solutions.
-                        </p>
-                      </div>
-                    </div>
+                    ))}
                   </RadioGroup>
+                  <EthicalInsights currentStep="budget" currentChoice={choices.budget} />
+                  {choices.trainingData && (
+                    <div className="mt-6">
+                      <TradeOffExplainer category="data" choice={choices.trainingData.join(",")} />
+                    </div>
+                  )}
                 </CardContent>
                 <CardFooter className="flex justify-end">
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
@@ -585,9 +577,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     Next: Content Filtering
                   </Button>
@@ -724,9 +719,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     Next: Behavior
                   </Button>
@@ -920,9 +918,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button
                     onClick={nextStep}
                     disabled={!isStepComplete()}
@@ -1060,9 +1061,12 @@ export function ChatbotBuilder() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={prevStep}>
-                    Back
-                  </Button>
+                  <Button variant="outline" onClick={() => {
+  setChoices(defaultChoices);
+  setCurrentStep(0);
+}}>
+  <RefreshCw className="h-4 w-4" /> Start Over
+</Button>
                   <Button onClick={nextStep} disabled={!isStepComplete()}>
                     See Your Chatbot
                   </Button>
