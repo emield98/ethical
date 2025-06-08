@@ -7,6 +7,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Download, RefreshCw, Share2 } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { insights, commonInsights } from "./ethical-insights"
+
+// Define EthicalInsight type if not imported from elsewhere
+type EthicalInsight = {
+  title: string
+  description: string
+  realWorldExample?: string
+  learnMoreLink?: string
+  applicableScenarios?: string[]
+}
+
+
+
 
 type ChatbotChoices = {
   budget: string
@@ -18,6 +31,38 @@ type ChatbotChoices = {
   adaptToUser: boolean
   biasHandling: string
 }
+
+function getRelevantInsights(choices: ChatbotChoices): EthicalInsight[] {
+  const stepKeys = [
+    `budget-${choices.budget}`,
+    ...choices.trainingData.map(d => `data-${d}`),
+    `filtering-${choices.contentFiltering}`,
+    `behavior-${choices.behavior}`,
+    `bias-${choices.biasHandling}`,
+  ]
+
+  const result: EthicalInsight[] = []
+
+  stepKeys.forEach(key => {
+    if (insights[key]) {
+      result.push(...insights[key])
+    }
+  })
+
+  // Add common insights if applicable
+  commonInsights.forEach(insight => {
+    if (insight.applicableScenarios?.some(key => stepKeys.includes(key))) {
+      result.push(insight)
+    }
+  })
+
+  if (choices.adaptToUser && insights["adaptToUser-true"]) {
+    result.push(...insights["adaptToUser-true"])
+  }
+
+  return result
+}
+
 
 export function ChatbotSummary({
   choices,
@@ -163,13 +208,13 @@ export function ChatbotSummary({
                 </p>
               </div>
 
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-medium mb-2">Interaction Style</h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    {getBehaviorDescription(choices.behavior)}
-                    {choices.adaptToUser && " Adapts to user preferences and behavior over time."}
-                  </p>
-                </div>
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-medium mb-2">Interaction Style</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {getBehaviorDescription(choices.behavior)}
+                  {choices.adaptToUser && " Adapts to user preferences and behavior over time."}
+                </p>
+              </div>
 
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Bias Management</h4>
@@ -201,44 +246,30 @@ export function ChatbotSummary({
 
           <TabsContent value="risks" className="pt-4 space-y-4">
             <Alert className="mb-4">
-              <AlertTitle>Important Note</AlertTitle>
+              <AlertTitle>Ethical Insights</AlertTitle>
               <AlertDescription>
-                All AI chatbots come with ethical considerations. Understanding these risks is crucial for responsible
-                deployment.
+                Insights below are based on your configuration.
               </AlertDescription>
             </Alert>
-
-            <div className="space-y-4">
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2">Data-Related Risks</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {choices.trainingData.includes("public") && "Public data may contain biases and misinformation. "}
-                  {choices.trainingData.includes("curated") && "Curated data may have limited scope and perspectives. "}
-                  {choices.trainingData.includes("proprietary") && "Proprietary data may create domain limitations. "}
-                </p>
+            {getRelevantInsights(choices).map((insight, index) => (
+              <div key={index} className="p-4 border rounded-lg space-y-1">
+                <h4 className="font-medium text-base">{insight.title}</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{insight.description}</p>
+                {insight.realWorldExample && (
+                  <p className="text-xs italic text-slate-500">e.g. {insight.realWorldExample}</p>
+                )}
+                {insight.learnMoreLink && (
+                  <a
+                    href={insight.learnMoreLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline"
+                  >
+                    Learn more
+                  </a>
+                )}
               </div>
-
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2">Content Filtering Risks</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {choices.contentFiltering === "minimal" &&
-                    "Minimal filtering increases risk of harmful content generation."}
-                  {choices.contentFiltering === "moderate" &&
-                    "Moderate filtering requires careful balance between safety and utility."}
-                  {choices.contentFiltering === "strict" &&
-                    "Strict filtering may prevent discussion of important topics."}
-                </p>
-              </div>
-
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2">Bias Management Risks</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {choices.biasHandling === "transparent" && "Transparency may reduce user confidence in the system."}
-                  {choices.biasHandling === "values" && "Value alignment may not represent all user perspectives."}
-                  {choices.biasHandling === "minimize" && "Perfect bias elimination is impossible to achieve."}
-                </p>
-              </div>
-            </div>
+            ))}
           </TabsContent>
 
           <TabsContent value="examples" className="pt-4 space-y-4">

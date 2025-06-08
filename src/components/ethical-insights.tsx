@@ -412,3 +412,5 @@ export function EthicalInsights({ currentStep, currentChoice, adaptToUser }: Eth
     </Card>
   )
 }
+// At bottom of ethical-insights.tsx
+export { insights, commonInsights }
