@@ -8,6 +8,14 @@ import { Badge } from "@/components/ui/badge"
 import { Download, RefreshCw, Share2 } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { insights, commonInsights } from "./ethical-insights"
+import {
+  dataOptions,
+  filteringOptions,
+  behaviorOptions,
+  biasOptions,
+} from "./chatbot-options"
+
+
 
 // Define EthicalInsight type if not imported from elsewhere
 interface EthicalInsight {
@@ -205,60 +213,82 @@ export function ChatbotSummary({
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="characteristics">Configuration</TabsTrigger>
             <TabsTrigger value="risks">Ethical Considerations</TabsTrigger>
-            <TabsTrigger value="examples">Similar Examples</TabsTrigger>
           </TabsList>
 
           <TabsContent value="characteristics" className="pt-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              {/* Training Data */}
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Training Data Sources</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {choices.trainingData.length > 0 ? getDataLabels(choices.trainingData) : "No data sources selected"}
-                </p>
+                <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2 list-disc list-inside">
+                  {choices.trainingData.map((sourceId) => {
+                    const option = dataOptions.find((opt) => opt.id === sourceId);
+                    return (
+                      <li key={sourceId}>
+                        <strong>{option?.label}</strong>
+                        <div className="text-sm text-slate-500 dark:text-slate-400">
+                          {option?.description}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
 
+              {/* Content Filtering */}
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Content Filtering</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {choices.contentFiltering || "No filtering level selected"}
-                </p>
+                {(() => {
+                  const option = filteringOptions.find((opt) => opt.id === choices.contentFiltering);
+                  return (
+                    <>
+                      <p className="text-sm font-semibold">{option?.label}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{option?.description}</p>
+                    </>
+                  );
+                })()}
               </div>
 
+              {/* Interaction Style */}
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Interaction Style</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {getBehaviorDescription(choices.behavior)}
-                  {choices.adaptToUser && " Adapts to user preferences and behavior over time."}
-                </p>
+                {(() => {
+                  const option = behaviorOptions.find((opt) => opt.id === choices.behavior);
+                  return (
+                    <>
+                      <p className="text-sm font-semibold">{option?.label}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        {option?.description}
+                        {choices.adaptToUser && (
+                          <>
+                            <br />
+                            <em>Also adapts to user preferences and communication style.</em>
+                          </>
+                        )}
+                      </p>
+                    </>
+                  );
+                })()}
               </div>
 
+              {/* Bias Management */}
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Bias Management</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {choices.biasHandling || "No bias handling selected"}
-                </p>
+                {(() => {
+                  const option = biasOptions.find((opt) => opt.id === choices.biasHandling);
+                  return (
+                    <>
+                      <p className="text-sm font-semibold">{option?.label}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{option?.description}</p>
+                    </>
+                  );
+                })()}
               </div>
             </div>
-
-            {spentPercentage > 90 && (
-              <Alert>
-                <AlertTitle>Budget Efficiency</AlertTitle>
-                <AlertDescription>
-                  You've used {spentPercentage.toFixed(1)}% of your budget. You made efficient use of your resources!
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {spentPercentage < 50 && choices.budgetAmount > 0 && (
-              <Alert>
-                <AlertTitle>Budget Remaining</AlertTitle>
-                <AlertDescription>
-                  You still have {formatCurrency(choices.remainingBudget)} remaining. You could have added more features
-                  or upgraded existing ones.
-                </AlertDescription>
-              </Alert>
-            )}
           </TabsContent>
+
+
 
           <TabsContent value="risks" className="pt-4 space-y-4">
             <Alert className="mb-4">
@@ -295,41 +325,6 @@ export function ChatbotSummary({
                 </div>
               )
             )}
-          </TabsContent>
-
-          <TabsContent value="examples" className="pt-4 space-y-4">
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-              Based on your choices, your chatbot would be similar to these real-world examples:
-            </p>
-
-            <div className="space-y-4">
-              {choices.budget === "large" && choices.trainingData.includes("public") && (
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-medium">ChatGPT-style Systems</h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Large-scale conversational AI with broad knowledge but potential for bias and misinformation.
-                  </p>
-                </div>
-              )}
-
-              {choices.budget === "medium" && choices.trainingData.includes("curated") && (
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-medium">Specialized Domain Assistants</h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Professional chatbots like legal or medical assistants with high-quality, domain-specific knowledge.
-                  </p>
-                </div>
-              )}
-
-              {choices.budget === "small" && (
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-medium">Small Business Chatbots</h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Simple customer service bots with limited scope but focused functionality.
-                  </p>
-                </div>
-              )}
-            </div>
           </TabsContent>
         </Tabs>
       </CardContent>
