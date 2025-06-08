@@ -157,11 +157,11 @@ const unavailableReasons: Record<
   },
   filtering: {
     moderate: {
-      small: "Combining AI filters with human review isn’t feasible without more resources.",
+      small: "Combining AI filters with human review isn't feasible without more resources.",
     },
     strict: {
       small: "A full moderation team and dashboards are far beyond what a starter budget can handle.",
-      medium: "Medium budgets still can’t afford 24/7 global moderation and enterprise oversight.",
+      medium: "Medium budgets still can't afford 24/7 global moderation and enterprise oversight.",
     },
   },
   behavior: {
@@ -180,7 +180,7 @@ const unavailableReasons: Record<
       small: "Aligning the AI with specific ethical goals involves expert input and review — not doable at this level.",
     },
     minimize: {
-      small: "You’d need a dedicated research team and tooling to minimize bias, which isn’t affordable here.",
+      small: "You'd need a dedicated research team and tooling to minimize bias, which isn't affordable here.",
       medium: "Full-scale bias mitigation is complex and resource-heavy — even medium budgets fall short.",
     },
   },
@@ -621,21 +621,18 @@ export function ChatbotBuilder() {
                     {[
                       {
                         id: "minimal",
-                        label: "Minimal Filtering",
-                        description:
-                          "Your AI will only block illegal content. It allows full access to information but the risk of generating offensive or harmful material increases.",
+                        label: "Basic Filtering",
+                        description: "Minimal content filtering that only blocks the most extreme content.",
                       },
                       {
                         id: "moderate",
-                        label: "Moderate Filtering",
-                        description:
-                          "Your AI can have respectful discussions on sensitive topics (e.g. gender identity, racism, politics, or religion) while blocking harmful content.",
+                        label: "Balanced Filtering",
+                        description: "Moderate filtering that balances safety with open discussion.",
                       },
                       {
                         id: "strict",
                         label: "Enterprise Filtering",
-                        description:
-                          "Use advanced AI models alongside human moderators to provide thorough, context-sensitive filtering. Your AI is designed to minimize harm while preserving meaningful dialogue.",
+                        description: "Strict filtering with comprehensive content moderation and safety measures.",
                       },
                     ].map((option) => {
                       const cost = getCost("filtering", option.id);
@@ -648,9 +645,8 @@ export function ChatbotBuilder() {
                           key={option.id}
                           className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
                             ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                            : !affordable && !choices.trainingData.includes(option.id)
+                            : !affordable && choices.contentFiltering !== option.id
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
-
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
                             }`}
                         >
@@ -658,7 +654,7 @@ export function ChatbotBuilder() {
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || (!affordable && !choices.trainingData.includes(option.id))}
+                            disabled={!available || (!affordable && choices.contentFiltering !== option.id)}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -671,8 +667,7 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={affordable || choices.trainingData.includes(option.id) ? "default" : "destructive"}
-
+                                    variant={affordable || choices.contentFiltering === option.id ? "default" : "destructive"}
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -698,7 +693,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && !choices.trainingData.includes(option.id) && (
+                            {!affordable && available && choices.contentFiltering !== option.id && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>
