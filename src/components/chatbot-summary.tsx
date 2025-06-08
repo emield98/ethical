@@ -88,7 +88,7 @@ export function ChatbotSummary({
       `bias-${choices.biasHandling}`,
     ]
 
-    let result: EthicalInsight[] = []
+    const result: EthicalInsight[] = []
 
     stepKeys.forEach((key) => {
       if (insights[key]) {
