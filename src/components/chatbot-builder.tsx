@@ -494,9 +494,8 @@ export function ChatbotBuilder() {
                           key={option.id}
                           className={`flex items-start space-x-3 p-4 border rounded-lg transition-colors ${!available
                             ? "opacity-50 bg-slate-100 dark:bg-slate-800"
-                            : !affordable && !choices.trainingData.includes(option.id)
+                            : !affordable && choices.contentFiltering !== option.id
                               ? "opacity-75 bg-red-50 dark:bg-red-900/20"
-
                               : "hover:bg-slate-50 dark:hover:bg-slate-900"
                             }`}
                         >
@@ -504,7 +503,7 @@ export function ChatbotBuilder() {
                             value={option.id}
                             id={option.id}
                             className="mt-1"
-                            disabled={!available || (!affordable && !choices.trainingData.includes(option.id))}
+                            disabled={!available || (!affordable && choices.contentFiltering !== option.id)}
                           />
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
@@ -517,8 +516,7 @@ export function ChatbotBuilder() {
                               {available ? (
                                 <div className="flex items-center gap-1">
                                   <Badge
-                                    variant={affordable || choices.trainingData.includes(option.id) ? "default" : "destructive"}
-
+                                    variant={affordable || choices.contentFiltering === option.id ? "default" : "destructive"}
                                   >
                                     {formatCurrency(cost ?? 0)}
                                   </Badge>
@@ -544,7 +542,7 @@ export function ChatbotBuilder() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               {option.description}
                             </p>
-                            {!affordable && available && !choices.trainingData.includes(option.id) && (
+                            {!affordable && available && choices.contentFiltering !== option.id && (
                               <p className="text-sm text-red-600 dark:text-red-400">
                                 Insufficient budget remaining
                               </p>

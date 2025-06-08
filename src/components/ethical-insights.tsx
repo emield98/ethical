@@ -111,7 +111,7 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "Workers Concerns",
       description:
-        "It is important to acknowledge and review the specific ethical issues that might arise when recruiting MTurk workers as participants. Things like participants’ economic vulnerability, participants’ sensitivity, and power dynamics between participants and researchers. ",
+        "It is important to acknowledge and review the specific ethical issues that might arise when recruiting MTurk workers as participants. Things like participants' economic vulnerability, participants' sensitivity, and power dynamics between participants and researchers. ",
       category: "data",
       sources: [
         {
@@ -314,16 +314,22 @@ export function EthicalInsights({ currentStep, currentChoice, adaptToUser }: Eth
   // Get insights based on current step and choice
   let relevantInsights: EthicalInsight[] = []
 
-  const stepKey = `${currentStep}-${currentChoice}`
+  // Split the currentChoice by comma to handle multiple values
+  const choices = currentChoice.split(",").filter(Boolean)
   
-  // Add specific insights for this step-choice combination
-  if (insights[stepKey]) {
-    relevantInsights = [...insights[stepKey]]
-  }
+  // Add specific insights for each choice
+  choices.forEach(choice => {
+    const stepKey = `${currentStep}-${choice.trim()}`
+    if (insights[stepKey]) {
+      relevantInsights = [...relevantInsights, ...insights[stepKey]]
+    }
+  })
   
   // Add common insights that apply to this scenario
   commonInsights.forEach(insight => {
-    if (insight.applicableScenarios?.includes(stepKey)) {
+    if (insight.applicableScenarios?.some(scenario => 
+      choices.some(choice => scenario === `${currentStep}-${choice.trim()}`)
+    )) {
       relevantInsights.push(insight)
     }
   })
@@ -332,6 +338,11 @@ export function EthicalInsights({ currentStep, currentChoice, adaptToUser }: Eth
   if (adaptToUser && currentStep === "behavior" && insights["adaptToUser-true"]) {
     relevantInsights = [...relevantInsights, ...insights["adaptToUser-true"]]
   }
+
+  // Remove duplicate insights based on title
+  relevantInsights = relevantInsights.filter((insight, index, self) =>
+    index === self.findIndex((i) => i.title === insight.title)
+  )
 
   if (relevantInsights.length === 0) {
     return null
