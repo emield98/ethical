@@ -91,7 +91,7 @@ const tradeOffs: Record<string, TradeOff> = {
       "More flexible than strict filtering",
     ],
     cons: [
-      "Relies on AI’s imperfect ability to read context",
+      "Relies on AI's imperfect ability to read context",
       "May still let subtle bias or some harmful content through",
       "Users may perceive filtering as either too strict or too loose",
       "May unintentionally block valid content in sensitive discussions",
@@ -301,7 +301,7 @@ export function TradeOffExplainer({ category, choice }: TradeOffExplainerProps) 
 
             <div className="pt-4 text-sm text-slate-600 dark:text-slate-400">
               <p>
-                <strong>Key insight:</strong> In AI development, there are rarely perfect choices—only different sets of
+                <strong>Key insight:</strong> In AI development, there are rarely perfect choices, only different sets of
                 trade-offs. Understanding these trade-offs is essential for making informed decisions that align with your
                 goals and values.
               </p>

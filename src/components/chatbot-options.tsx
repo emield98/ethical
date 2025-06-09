@@ -149,7 +149,7 @@ export const explanations: Record<string, Record<string, Record<string, string>>
     },
     curated: {
       medium: "Includes licensed access to trusted sources like academic journals or verified news. Improves fact accuracy.",
-      large: "Full library access to professional content like legal texts, textbooks, or financial reports — perfect for experts.",
+      large: "Full library access to professional content like legal texts, textbooks, or financial reports. Perfect for experts.",
     },
     proprietary: {
       small: "Small custom dataset built with freelancer help. Useful for focused use cases like a niche support bot.",
@@ -218,11 +218,11 @@ export const unavailableReasons: Record<
   },
   filtering: {
     moderate: {
-      small: "Combining AI filters with human review isn’t feasible without more resources.",
+      small: "Combining AI filters with human review isn't feasible without more resources.",
     },
     strict: {
       small: "A full moderation team and dashboards are far beyond what a starter budget can handle.",
-      medium: "Medium budgets still can’t afford 24/7 global moderation and enterprise oversight.",
+      medium: "Medium budgets still can't afford 24/7 global moderation and enterprise oversight.",
     },
   },
   behavior: {
@@ -230,7 +230,7 @@ export const unavailableReasons: Record<
       small: "Confident, fact-checked answers need more training and validation than this budget allows.",
     },
     empathetic: {
-      small: "Emotionally intelligent responses need custom training — too costly for small projects.",
+      small: "Emotionally intelligent responses need custom training. Too costly for small projects.",
     },
     transparent: {
       small: "Explaining limitations and sources in detail requires advanced systems not supported here.",
@@ -238,11 +238,11 @@ export const unavailableReasons: Record<
   },
   bias: {
     values: {
-      small: "Aligning the AI with specific ethical goals involves expert input and review — not doable at this level.",
+      small: "Aligning the AI with specific ethical goals involves expert input and review. Not doable at this level.",
     },
     minimize: {
-      small: "You’d need a dedicated research team and tooling to minimize bias, which isn’t affordable here.",
-      medium: "Full-scale bias mitigation is complex and resource-heavy — even medium budgets fall short.",
+      small: "You'd need a dedicated research team and tooling to minimize bias, which isn't affordable here.",
+      medium: "Full-scale bias mitigation is complex and resource-heavy. Even medium budgets fall short.",
     },
   },
 };

@@ -56,7 +56,7 @@ const insights: Record<string, EthicalInsight[]> = {
       "Small budgets often exclude structured ethical audits, safety testing, or long-term risk assessment. Developers may rely on free or low-quality tools and datasets, unintentionally embedding harmful patterns into the system. Ethical blind spots often go unnoticed due to time and resource pressure.",
     category: "budget",
     realWorldExample:
-      "In 2023, a small startup released an AI mental health chatbot (Tessa) that offered inappropriate advice due to a lack of professional oversight and dataset review — leading to widespread backlash and its eventual takedown.",
+      "In 2023, a small startup released an AI mental health chatbot (Tessa) that offered inappropriate advice due to a lack of professional oversight and dataset review, leading to widespread backlash and its eventual takedown.",
     learnMoreLink: "https://www.cbsnews.com/news/eating-disorder-helpline-chatbot-disabled/",
     }
 ],
@@ -73,7 +73,7 @@ const insights: Record<string, EthicalInsight[]> = {
   {
     title: "Power at a Price: Ethical Responsibility at Scale",
     description:
-      "Large budgets support cutting-edge models — but with immense energy consumption, massive compute usage (e.g., GPU clusters), and greater societal influence. Ethical responsibility scales with power: deploying high-impact AI requires global fairness, sustainability, and accountability frameworks.",
+      "Large budgets support cutting-edge models, but with immense energy consumption, massive compute usage (e.g., GPU clusters), and greater societal influence. Ethical responsibility scales with power: deploying high-impact AI requires global fairness, sustainability, and accountability frameworks.",
     category: "budget",
     realWorldExample:
       "Training GPT-3 required hundreds of petaflop/s-days of compute, consuming energy equivalent to multiple U.S. households over a year. Large tech firms have since faced pressure to account for the environmental and social externalities of scaling AI systems.",
