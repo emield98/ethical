@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,15 +21,11 @@ import { BudgetTracker } from "./budget-tracker";
 import { ChatbotAnimation } from "./chatbot-animation";
 import { StepProgress } from "./step-progress";
 import { Badge } from "@/components/ui/badge";
-import { Info, RefreshCw } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { RefreshCw } from "lucide-react";
 import { GlossaryTooltip } from "./ui-tooltip";
 import { filteringOptions, costs, explanations, unavailableReasons } from "./chatbot-options";
+import { formatCurrency } from "@/lib/utils";
+import { InfoTooltip } from "./info-tooltip";
 
 const steps = ["budget", "data", "filtering", "behavior", "bias", "summary"];
 const stepTitles = [
@@ -65,12 +61,6 @@ export function ChatbotBuilder() {
     biasHandling: "",
   };
   const [choices, setChoices] = useState<ChatbotChoices>(defaultChoices);
-
-  useEffect(() => {
-    if (currentStep === 0) {
-      setChoices(defaultChoices);
-    }
-  }, []);
 
   const updateChoice = <K extends keyof ChatbotChoices>(
     category: K,
@@ -132,68 +122,6 @@ export function ChatbotBuilder() {
       default:
         return true;
     }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const InfoTooltip = ({
-    category,
-    option,
-    budgetLevel,
-  }: {
-    category: string;
-    option: string;
-    budgetLevel: string;
-  }) => {
-    // Try to get explanation for specific budget level first, then fallback to any available explanation
-    let explanation = null;
-    let unavailableReason = null;
-
-    // Check if we have explanations for this category and option
-    if (explanations[category] && explanations[category][option]) {
-      // Try to get budget-level specific explanation
-      if (explanations[category][option][budgetLevel]) {
-        explanation = explanations[category][option][budgetLevel];
-      } else {
-        // Get the first available explanation for this option
-        const availableExplanations = explanations[category][option];
-        const firstKey = Object.keys(availableExplanations)[0];
-        if (firstKey) {
-          explanation = availableExplanations[firstKey];
-        }
-      }
-    }
-
-    // Check for unavailable reasons
-    if (unavailableReasons[category] && unavailableReasons[category][option]) {
-      if (unavailableReasons[category][option][budgetLevel]) {
-        unavailableReason = unavailableReasons[category][option][budgetLevel];
-      }
-    }
-
-    const content = explanation || unavailableReason;
-
-    if (!content) return null;
-
-    return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Info className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-help" />
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs p-3">
-            <p className="text-sm">{content}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
   };
 
   return (

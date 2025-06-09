@@ -14,8 +14,7 @@ import {
   behaviorOptions,
   biasOptions,
 } from "./chatbot-options"
-
-
+import { formatCurrency } from "@/lib/utils"
 
 // Define EthicalInsight type if not imported from elsewhere
 interface EthicalInsight {
@@ -47,15 +46,6 @@ export function ChatbotSummary({
   onReset: () => void
 }) {
   const [activeTab, setActiveTab] = useState("characteristics")
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount)
-  }
 
   const getBudgetLabel = (budget: string): string => {
     switch (budget) {
@@ -813,15 +803,6 @@ function getRealWorldExamples(choices: ChatbotChoices): { name: string; descript
 }
 
 function generateSummaryText(choices: ChatbotChoices): string {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount)
-  }
-
   const spentBudget = choices.budgetAmount - choices.remainingBudget
   const spentPercentage = choices.budgetAmount > 0 ? (spentBudget / choices.budgetAmount) * 100 : 0
 

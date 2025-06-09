@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { DollarSign, TrendingDown, AlertTriangle } from "lucide-react"
+import { formatCurrency } from "@/lib/utils"
 
 interface BudgetTrackerProps {
   totalBudget: number
@@ -14,15 +15,6 @@ export function BudgetTracker({ totalBudget, remainingBudget, currentStep }: Bud
   const spentBudget = totalBudget - remainingBudget
   const spentPercentage = totalBudget > 0 ? (spentBudget / totalBudget) * 100 : 0
   const remainingPercentage = 100 - spentPercentage
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount)
-  }
 
   const getBudgetStatus = () => {
     if (remainingPercentage > 50) return { color: "text-green-600", icon: DollarSign }
