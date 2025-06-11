@@ -59,7 +59,6 @@ export function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
   const definition = glossary[normalizedTerm]
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLSpanElement>(null)
-
   // Detect touch device (move outside render to avoid conditional hook call)
   const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
