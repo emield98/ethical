@@ -195,26 +195,29 @@ const tradeOffs: Record<string, TradeOff> = {
     pros: [
       "Aims for fairness across different groups and viewpoints",
       "Reduces risk of perpetuating harmful stereotypes",
-      "Addresses bias at multiple levels of the pipeline: from data to representation to output.",
-      "Potential for a more robust and ethically-aligned model.",
+      "Addresses bias at multiple levels of the pipeline: from data to representation to output",
+      "Potential for a more robust and ethically-aligned model",
+      "Signals a strong ethical commitment to responsible AI",
     ],
     cons: [
-      "Risk of overcorrecting",
+      "Risk of overcorrecting, which leads to inaccuracy",
       "Perfect debiasing is impossible to achieve",
-      "May reduce performance due to debiasing constraints.",
+      "May reduce performance due to debiasing constraints",
       "Technically complex and expensive",
-    ],
+      "May erase meaningful cultural variation and make responses feel overly uniform"
+    ]
   },
   "bias-values": {
     title: "Debiasing the dataset",
     description: "Attempting to remove harmful biases in the data before training.",
     pros: [
-      "Relatively easy to implement compared to architectural debiasing.",
-      "Can reduce exposure to extremely biased content.",
+      "Relatively easy to implement compared to architectural debiasing",
+      "Can reduce exposure to extremely biased content",
       "Using a 'cleaner' dataset avoids learning from problematic sources",
+      "Avoids learning harmful associations present in large-scale raw data",
     ],
     cons: [
-      "Will still be biased since bias cannot be removed by cleaning the dataset",
+      "Will still be biased since bias cannot be entirely removed by cleaning the dataset",
       "Cleaning the dataset might remove valuable information",
       "Risk of false sense of security since not all bias is removed",
     ],
@@ -223,7 +226,7 @@ const tradeOffs: Record<string, TradeOff> = {
     title: "Acknowledge Biases Transparently",
     description: "No debiasing, instead openly disclose potential biases and limitations when providing information.",
     pros: [
-      "Preserves the models full expressiveness and access to all original patterns in the data.",
+      "Preserves the models full expressiveness and access to all original patterns in the data",
       "Encourages critical thinking about AI-generated content",
       "Reduces risk of users placing excessive trust in AI",
     ],
@@ -231,6 +234,7 @@ const tradeOffs: Record<string, TradeOff> = {
       "May undermine confidence in otherwise accurate information",
       "High risk of amplifying existing stereotypes",
       "May confuse users who expect definitive answers",
+      "Warnings are often ignored or misunderstood by users"
     ],
   },
 }
