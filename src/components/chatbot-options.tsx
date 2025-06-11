@@ -148,6 +148,7 @@ export const explanations: Record<string, Record<string, Record<string, string>>
       large: "Advanced processing of massive public datasets from across the web, with expert filtering and formatting.",
     },
     curated: {
+      small: "Includes high-quality sources like academic papers and news articles. Great for reliable information but more expensive.",
       medium: "Includes licensed access to trusted sources like academic journals or verified news. Improves fact accuracy.",
       large: "Full library access to professional content like legal texts, textbooks, or financial reports. Perfect for experts.",
     },
