@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React, { useState, useRef, useEffect } from "react"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
@@ -57,16 +57,48 @@ const glossary: Record<string, string> = {
 export function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
   const normalizedTerm = term.toLowerCase()
   const definition = glossary[normalizedTerm]
+  const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLSpanElement>(null)
+
+  // Detect touch device
+  const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
   if (!definition) {
     return <>{children}</>
   }
 
+  // On touch, open on tap, close on tap outside or tap again
+  const handleTouch = (e: React.TouchEvent) => {
+    e.preventDefault()
+    setOpen((prev) => !prev)
+  }
+
+  // Close tooltip on click outside
+  useEffect(() => {
+    if (!open || !isTouch) return
+    const handleClick = (e: MouseEvent) => {
+      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open, isTouch])
+
   return (
     <TooltipProvider>
-      <Tooltip delayDuration={300}>
+      <Tooltip delayDuration={300} open={isTouch ? open : undefined} onOpenChange={isTouch ? setOpen : undefined}>
         <TooltipTrigger asChild>
-          <span className="border-dotted border-b border-slate-400 cursor-help">{children}</span>
+          <span
+            ref={triggerRef}
+            className="border-dotted border-b border-slate-400 cursor-help"
+            onTouchStart={isTouch ? handleTouch : undefined}
+            tabIndex={0}
+            role="button"
+            aria-label={definition}
+          >
+            {children}
+          </span>
         </TooltipTrigger>
         <TooltipContent className="max-w-sm p-3">
           <div className="text-sm">{definition}</div>

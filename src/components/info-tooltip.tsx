@@ -1,3 +1,4 @@
+import React, { useState, useRef, useEffect } from "react";
 import { Info } from "lucide-react";
 import {
   Tooltip,
@@ -21,32 +22,40 @@ export function InfoTooltip({ category, option, budgetLevel }: InfoTooltipProps)
   const unavailableReason =
     unavailableReasons[category]?.[option]?.[budgetLevel] ?? null;
 
-  // Prefer unavailableReason when explanation is missing
   const content = explanation ?? unavailableReason;
 
-  // If explanation is missing but unavailableReason exists, show that
-  if (!explanation && unavailableReason) {
-    return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Info className="h-4 w-4 text-red-400 hover:text-red-600 cursor-help" />
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs p-3">
-            <p className="text-sm">{unavailableReason}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
-  }
+  const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLSpanElement>(null)
+  const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+
+  // Close tooltip on click outside
+  useEffect(() => {
+    if (!open || !isTouch) return
+    const handleClick = (e: MouseEvent) => {
+      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open, isTouch])
 
   if (!content) return null;
 
   return (
     <TooltipProvider>
-      <Tooltip>
+      <Tooltip delayDuration={300} open={isTouch ? open : undefined} onOpenChange={isTouch ? setOpen : undefined}>
         <TooltipTrigger asChild>
-          <Info className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-help" />
+          <span
+            ref={triggerRef}
+            className="inline-flex"
+            onTouchStart={isTouch ? (e) => { e.preventDefault(); setOpen((prev) => !prev) } : undefined}
+            tabIndex={0}
+            role="button"
+            aria-label={content}
+          >
+            <Info className="h-4 w-4 text-slate-400 hover:text-slate-600 cursor-help" />
+          </span>
         </TooltipTrigger>
         <TooltipContent className="max-w-xs p-3">
           <p className="text-sm">{content}</p>
