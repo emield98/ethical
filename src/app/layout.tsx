@@ -33,8 +33,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Analytics/>
         {children}
+        <Analytics/>
         <footer className="w-full text-center text-xs text-slate-400 py-6 mt-0 border-t border-slate-100 dark:border-slate-800">
           &copy; {new Date().getFullYear()} Build Your Own Chatbot. All rights
           reserved.
