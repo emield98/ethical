@@ -251,9 +251,9 @@ const insights: Record<string, EthicalInsight[]> = {
   ],
   "bias-values": [
     {
-      title: "Debiasing Dataset",
+      title: "Debiasing Dataset is not enough",
       description:
-        "Debiasing the dataset before training of the model starts, examples of these might include balancing gender pronoun occurences for gender neutral occupations. For example: ensuring that cases of 'he is a doctor' and 'she is a doctor' occur a similar amount of times.",
+        "Just cleaning the dataset doesn’t mean the model is actually fair.  Often people think the model is neutral because the data had been filtered, but the bias  still there. This shows that only focusing on the data can create a false sense of safety and stop people from looking deeper.",
       category: "bias",
       realWorldExample:
         "OpenAI used cleaned datasets for GPT-3 with the hope that this would lead to a model with less bias. The result was a model which was perceived to have no bias, but was in fact still biased. This created a false sense of security.",
