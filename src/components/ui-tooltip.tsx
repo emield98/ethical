@@ -60,20 +60,10 @@ export function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLSpanElement>(null)
 
-  // Detect touch device
+  // Detect touch device (move outside render to avoid conditional hook call)
   const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
-  if (!definition) {
-    return <>{children}</>
-  }
-
-  // On touch, open on tap, close on tap outside or tap again
-  const handleTouch = (e: React.TouchEvent) => {
-    e.preventDefault()
-    setOpen((prev) => !prev)
-  }
-
-  // Close tooltip on click outside
+  // Always call useEffect, but only add/remove event if needed
   useEffect(() => {
     if (!open || !isTouch) return
     const handleClick = (e: MouseEvent) => {
@@ -85,6 +75,17 @@ export function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [open, isTouch])
 
+  if (!definition) {
+    return <>{children}</>
+  }
+
+  const handleTouch = (e: React.TouchEvent) => {
+    if (isTouch) {
+      e.preventDefault()
+      setOpen((prev) => !prev)
+    }
+  }
+
   return (
     <TooltipProvider>
       <Tooltip delayDuration={300} open={isTouch ? open : undefined} onOpenChange={isTouch ? setOpen : undefined}>
@@ -92,7 +93,7 @@ export function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
           <span
             ref={triggerRef}
             className="border-dotted border-b border-slate-400 cursor-help"
-            onTouchStart={isTouch ? handleTouch : undefined}
+            onTouchStart={handleTouch}
             tabIndex={0}
             role="button"
             aria-label={definition}
