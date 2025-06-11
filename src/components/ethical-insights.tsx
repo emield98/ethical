@@ -233,33 +233,59 @@ const insights: Record<string, EthicalInsight[]> = {
     {
       title: "False Neutrality",
       description:
-        "The case of lipstick on a pig. These methods can only cover up the biases involved in de model but will not remove systematic gender biases in word embeddings. Risk of inaccurate outcomes due to overdebiasing.",
+        "The case of lipstick on a pig. These methods can only cover up the biases involved in de model but will not remove systematic gender biases in word embeddings. There is a risk of inaccurate outcomes due to overdebiasing.",
       category: "bias",
       realWorldExample:
         "The Gemini software made by google produced historically inaccurate output as a result of overly debiasing. https://www.theguardian.com/technology/2024/feb/28/google-chief-ai-tools-photo-diversity-offended-users",
       learnMoreLink: "https://www.youtube.com/watch?v=V08bH95W9eM",
     },
+    {
+      title: "Cultural flattening from overdebiasing",
+      description:
+        "When models are aggressively debiased at every stage they can lose meaningful cultural variation. The result is a flattened, homogenized output, defaulting to dominant (often Western) norms and erasing diverse cultural voices.",
+      category: "bias",
+      realWorldExample:
+        "An ACL paper studying multilingual and Arabic monolingual LMs found that despite efforts for neutrality, these models systematically favored Western cultural entities. This shows how overdebiasing can erase non-Western cultural contexts in generation and understanding.",
+      learnMoreLink: "https://aclanthology.org/2024.acl-long.862/"
+    }
   ],
   "bias-values": [
     {
       title: "Debiasing Dataset",
       description:
-        "Debiasing the dataset before training of the model starts",
+        "Debiasing the dataset before training of the model starts, examples of these might include balancing gender pronoun occurences for gender neutral occupations. For example: ensuring that cases of 'he is a doctor' and 'she is a doctor' occur a similar amount of times.",
       category: "bias",
       realWorldExample:
         "OpenAI used cleaned datasets for GPT-3 with the hope that this would lead to a model with less bias. The result was a model which was perceived to have no bias, but was in fact still biased. This created a false sense of security.",
       learnMoreLink: "https://aclanthology.org/2021.nuse-1.5/#:~:text=Our%20study%20raises%20questions%20on%20how%20one%20can,Third%20Workshop%20on%20Narrative%20Understanding%2C%20pages%2048%E2%80%9355%2C%20Virtual.", 
     },
+    {
+      title: "False confidence from dataset-only debiasing",
+      description:
+        "Only debiasing the dataset during fine-tuning can lead to the mistaken belief that a model is fair, even though the original pre-trained model still contains deeply embedded biases. These can resurface during use, especially in subtle or complex contexts, undermining the effectiveness of the intervention.",
+      category: "bias",
+      realWorldExample:
+        "Researchers fine-tuned BERT on gender-balanced datasets to reduce bias. However, the model still associated occupations like 'programmer' more with 'man' than 'woman', showing that without addressing the underlying representations, dataset-level fixes are not enough.",
+      learnMoreLink: "https://arxiv.org/abs/2010.14534"
+    }
   ],
   "bias-transparent": [
     {
       title: "Reinforcing stereotypes",
       description:
-        "Models with large biases often lead to public outrage, despite previous warnings that the model might be biased",
+        "Models with large biases often lead to public outrage, despite previous warnings that the model might be biased. This leads to the insight that it might not be enough to just commit to disclosing the biases, they should actively be adressed.",
       category: "bias",
       realWorldExample: "Meta released Galactica without debiasing but with warnings about potential bias, yet the model quickly lost public trust after generating misleading and biased scientific content, leading to its removal just three days later.",
       learnMoreLink: "https://www.technologyreview.com/2022/11/18/1063487/meta-large-language-model-ai-only-survived-three-days-gpt-3-science/"
     },
+    {
+      title: "Overtrust in flawed outputs",
+      description:
+      "Even when a model’s limitations are disclosed, users may still overtrust its outputs, especially in informal or emotionally engaging settings. If no debiasing is done, the model may reproduce offensive or harmful content that damages public trust and leads to ethical failures.",
+      category: "bias",
+      realWorldExample: "Microsoft released Tay, an AI chatbot, without proper debiasing and with minimal oversight. Despite being labeled experimental, the bot rapidly began producing racist and offensive tweets based on user interactions, resulting in its shutdown within 24 hours.",
+      learnMoreLink: "https://www.theverge.com/2016/3/24/11297050/tay-microsoft-chatbot-racist"
+    }
   ],
   "budget-low": [
     {
