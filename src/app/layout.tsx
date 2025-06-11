@@ -31,6 +31,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <footer className="w-full text-center text-xs text-slate-400 py-6 mt-0 border-t border-slate-100 dark:border-slate-800">
+          &copy; {new Date().getFullYear()} Build Your Own Chatbot. All rights
+          reserved.
+          <br />
+          Made by Kylian, Stijn, Andrew en Emiel
+          <br />
+          University of Groningen
+        </footer>
       </body>
     </html>
   );
