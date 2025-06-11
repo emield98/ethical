@@ -35,7 +35,7 @@ export default function RootLayout({
           &copy; {new Date().getFullYear()} Build Your Own Chatbot. All rights
           reserved.
           <br />
-          Made by Kylian, Stijn, Andrew en Emiel
+          Made by Kylian, Stijn, Andrew, Marco and Emiel
           <br />
           University of Groningen
         </footer>
