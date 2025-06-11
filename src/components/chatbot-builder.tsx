@@ -742,7 +742,7 @@ export function ChatbotBuilder() {
                         id: "values",
                         label: "Debiasing the Dataset",
                         description:
-                          "Attempting to remove harmful biases in the data before training. Examples of this include balancing the frequency of gender pronouns for neutral occupations, i.e. equal occurences of 'he is a doctor' and 'she is a doctor'.",
+                          "Debiasing the dataset before training of the model starts, examples of these might include balancing gender pronoun occurences for gender neutral occupations. For example: ensuring that cases of 'he is a doctor' and 'she is a doctor' occur a similar amount of times.",
                       },
                       {
                         id: "minimize",
